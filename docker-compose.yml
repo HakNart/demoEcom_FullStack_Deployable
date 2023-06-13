@@ -1,0 +1,54 @@
+services:
+  db:
+    build: 
+      context: .
+      dockerfile: postgres.dockerfile
+    image: "postgres_ecommerce"
+    container_name: "postgres_ecom"
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - '5432:5432'
+    networks:
+      - apinetwork
+
+  api:
+    depends_on:
+      - db
+    container_name: demoEcomApi
+    build: ./demo_ecom_api
+    # image: api:v1
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    # expose:
+    #   - 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DATABASE_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      SERVICE_TAGS: prod
+      SERVICE_NAME: springapi
+    networks:
+      - apinetwork
+  frontend:
+    depends_on:
+      - api
+    build: ./demoEcommerceReactApp
+    container_name: demoEcomReactApp
+    ports:
+    - '3000:3000'
+    expose:
+      - 3000
+    stdin_open: true
+    environment:
+      VITE_APP_HOST: "http://localhost:8080"
+    networks:
+      - apinetwork
+
+networks:
+  apinetwork:
+    driver: bridge

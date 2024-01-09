@@ -39,12 +39,11 @@ public class OrderController {
             throw new UserNotFoundException("User not found");
         }
         User user = getUser.get();
-        Order order = new Order (
-                user,
-                createdOrderRequest.getAmountPaid(),
-                createdOrderRequest.getQuantity(),
-                createdOrderRequest.getOrderItems()
-        );
+
+        Order order = Order.builder().user(user)
+                        .amountPaid(createdOrderRequest.getAmountPaid())
+                                .quantity(createdOrderRequest.getQuantity())
+                                        .orderItems(createdOrderRequest.getOrderItems()).build();
         orderRepository.save(order);
         UserDetailResponse userDetailResponse = businessService.createUserDetailResponse(user);
         OrderDetailResponse orderDetailResponse = businessService.createOrderDetailResponse(order, userDetailResponse);

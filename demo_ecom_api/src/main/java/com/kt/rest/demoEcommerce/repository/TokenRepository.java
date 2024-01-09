@@ -1,6 +1,6 @@
 package com.kt.rest.demoEcommerce.repository;
 
-import com.kt.rest.demoEcommerce.models.auth.Token;
+import com.kt.rest.demoEcommerce.model.auth.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,7 +1,6 @@
-package com.kt.rest.demoEcommerce.model.entities;
+package com.kt.rest.demoEcommerce.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kt.rest.demoEcommerce.model.auth.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

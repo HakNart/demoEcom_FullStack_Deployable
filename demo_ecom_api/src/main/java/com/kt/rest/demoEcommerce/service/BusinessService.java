@@ -1,10 +1,10 @@
 package com.kt.rest.demoEcommerce.service;
 
-import com.kt.rest.demoEcommerce.model.auth.User;
-import com.kt.rest.demoEcommerce.model.dataModels.OrderDetailResponse;
-import com.kt.rest.demoEcommerce.model.dataModels.UserDetailResponse;
-import com.kt.rest.demoEcommerce.model.entities.Order;
-import com.kt.rest.demoEcommerce.model.dataModels.OrderHistoryDetailResponse;
+import com.kt.rest.demoEcommerce.model.entity.User;
+import com.kt.rest.demoEcommerce.model.dto.OrderDetailResponse;
+import com.kt.rest.demoEcommerce.model.dto.UserDetailResponse;
+import com.kt.rest.demoEcommerce.model.entity.Order;
+import com.kt.rest.demoEcommerce.model.dto.OrderHistoryDetailResponse;
 import com.kt.rest.demoEcommerce.repository.OrderRepository;
 import com.kt.rest.demoEcommerce.repository.ProductRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
@@ -24,7 +24,7 @@ public class BusinessService {
     public UserDetailResponse createUserDetailResponse(User user) {
 
         return UserDetailResponse.builder()
-                .name(user.getName())
+                .name(user.getUsername())
                 .email(user.getEmail())
                 .id(user.getId())
                 .build();

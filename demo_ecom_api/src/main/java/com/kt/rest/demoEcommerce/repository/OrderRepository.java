@@ -1,6 +1,6 @@
 package com.kt.rest.demoEcommerce.repository;
 
-import com.kt.rest.demoEcommerce.model.entities.Order;
+import com.kt.rest.demoEcommerce.model.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

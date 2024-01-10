@@ -1,6 +1,6 @@
 package com.kt.rest.demoEcommerce.repository;
 
-import com.kt.rest.demoEcommerce.model.entities.Product;
+import com.kt.rest.demoEcommerce.model.entity.Product;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;

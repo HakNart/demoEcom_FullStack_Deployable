@@ -1,11 +1,11 @@
 package com.kt.rest.demoEcommerce.controller;
 
-import com.kt.rest.demoEcommerce.exeptions.UserNotFoundException;
-import com.kt.rest.demoEcommerce.model.auth.User;
-import com.kt.rest.demoEcommerce.model.entities.Order;
-import com.kt.rest.demoEcommerce.model.dataModels.OrderCreateRequest;
-import com.kt.rest.demoEcommerce.model.dataModels.OrderDetailResponse;
-import com.kt.rest.demoEcommerce.model.dataModels.UserDetailResponse;
+import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
+import com.kt.rest.demoEcommerce.model.entity.User;
+import com.kt.rest.demoEcommerce.model.entity.Order;
+import com.kt.rest.demoEcommerce.model.dto.OrderCreateRequest;
+import com.kt.rest.demoEcommerce.model.dto.OrderDetailResponse;
+import com.kt.rest.demoEcommerce.model.dto.UserDetailResponse;
 import com.kt.rest.demoEcommerce.repository.OrderRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.BusinessService;
@@ -36,7 +36,7 @@ public class OrderController {
     public ResponseEntity<OrderDetailResponse> createOrder(@RequestBody OrderCreateRequest createdOrderRequest) {
         Optional<User> getUser = userRepository.findById(createdOrderRequest.getUserId());
         if(!getUser.isPresent()) {
-            throw new UserNotFoundException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         User user = getUser.get();
 

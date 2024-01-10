@@ -1,5 +1,6 @@
 package com.kt.rest.demoEcommerce.model.auth;
 
+import com.kt.rest.demoEcommerce.model.entity.User;
 import jakarta.persistence.*;
 
 @Table

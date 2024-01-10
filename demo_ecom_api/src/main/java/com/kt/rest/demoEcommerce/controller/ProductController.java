@@ -2,7 +2,7 @@ package com.kt.rest.demoEcommerce.controller;
 
 
 import com.kt.rest.demoEcommerce.exeptions.ProductNotFoundException;
-import com.kt.rest.demoEcommerce.model.entities.Product;
+import com.kt.rest.demoEcommerce.model.entity.Product;
 import com.kt.rest.demoEcommerce.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 

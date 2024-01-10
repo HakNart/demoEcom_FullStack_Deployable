@@ -1,10 +1,10 @@
 package com.kt.rest.demoEcommerce.controller;
 
-import com.kt.rest.demoEcommerce.exeptions.UserNotFoundException;
-import com.kt.rest.demoEcommerce.model.auth.User;
-import com.kt.rest.demoEcommerce.model.dataModels.UserDetailResponse;
-import com.kt.rest.demoEcommerce.model.entities.Order;
-import com.kt.rest.demoEcommerce.model.dataModels.OrderHistoryDetailResponse;
+import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
+import com.kt.rest.demoEcommerce.model.entity.User;
+import com.kt.rest.demoEcommerce.model.dto.UserDetailResponse;
+import com.kt.rest.demoEcommerce.model.entity.Order;
+import com.kt.rest.demoEcommerce.model.dto.OrderHistoryDetailResponse;
 import com.kt.rest.demoEcommerce.repository.OrderRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.BusinessService;
@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailResponse> getUser(@PathVariable Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         UserDetailResponse userDetailResponse = UserDetailResponse.builder()
                 .name(user.getName())
                 .email(user.getEmail())

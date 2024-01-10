@@ -1,7 +1,7 @@
-package com.kt.rest.demoEcommerce.model.dataModels;
+package com.kt.rest.demoEcommerce.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kt.rest.demoEcommerce.model.entities.Product;
+import com.kt.rest.demoEcommerce.model.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

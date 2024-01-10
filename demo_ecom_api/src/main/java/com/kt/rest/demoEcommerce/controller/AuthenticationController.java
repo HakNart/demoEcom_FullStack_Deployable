@@ -1,7 +1,7 @@
 package com.kt.rest.demoEcommerce.controller;
 
 import com.kt.rest.demoEcommerce.model.auth.*;
-import com.kt.rest.demoEcommerce.model.dataModels.CustomErrorResponse;
+import com.kt.rest.demoEcommerce.model.dto.CustomErrorResponse;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.AuthenticationService;
 import org.springframework.http.HttpStatus;

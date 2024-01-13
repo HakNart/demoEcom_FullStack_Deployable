@@ -15,11 +15,15 @@ public class ApiResponse<T> {
     private ApiResponse() {
 
     }
-    public Builder<T> builder() {
-        return new Builder<T>();
+
+    ApiResponse(String status, T payload, String message) {}
+
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
     }
-    private static class Builder<T> {
-        private final ApiResponse<T> apiResponse = new ApiResponse<>();
+
+    public static class Builder<T> {
+        private final ApiResponse<T> apiResponse = new ApiResponse<T>();
 
         public Builder<T> success(T payload) {
             apiResponse.status = "success";

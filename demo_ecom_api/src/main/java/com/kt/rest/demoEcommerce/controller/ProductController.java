@@ -2,8 +2,12 @@ package com.kt.rest.demoEcommerce.controller;
 
 
 import com.kt.rest.demoEcommerce.exeptions.ProductNotFoundException;
+import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
+import com.kt.rest.demoEcommerce.model.dto.ProductDTO;
 import com.kt.rest.demoEcommerce.model.entity.Product;
 import com.kt.rest.demoEcommerce.repository.ProductRepository;
+import com.kt.rest.demoEcommerce.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,22 +17,27 @@ import java.util.Optional;
 @RequestMapping("/products")
 public class ProductController {
     private ProductRepository productRepository;
+    private ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, ProductService productService) {
         this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     @GetMapping
 
-    public List<Product> getAllProducts(@RequestParam(name = "name_like", required = false, defaultValue = "") String name,
-                                        @RequestParam(name = "featured", required = false, defaultValue = "") String featured) {
-        if (!name.isEmpty()) {
-            return productRepository.findAllByProductNameContainingIgnoreCase(name);
-        } else if (featured.equals("true")) {
-            return productRepository.findAllByFeaturedTrue();
-        } else {
-            return productRepository.findAll();
-        }
+    public ResponseEntity<?> getAllProducts(@RequestParam(name = "name_like", required = false, defaultValue = "") String name,
+                                         @RequestParam(name = "featured", required = false, defaultValue = "") String featured) {
+        List<ProductDTO> productDTOList = productService.findAllProductsByCriteria(name, featured);
+//        if (!name.isEmpty()) {
+////            return productRepository.findAllByProductNameContainingIgnoreCase(name);
+//            productDTOList =  productService.findAllProductsByCriteria(name, featured);
+//        } else if (featured.equals("true")) {
+//            return productRepository.findAllByFeaturedTrue();
+//        } else {
+//            return productRepository.findAll();
+//        }
+        return ResponseEntity.ok(ApiResponse.builder().success(productDTOList).build());
     }
 
     @GetMapping(value = "/{id}")

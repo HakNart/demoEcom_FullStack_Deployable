@@ -1,11 +1,12 @@
 const host = import.meta.env.VITE_APP_HOST;
 export async function getProductList(searchTerm) {
   const response = await fetch(`${host}/products?name_like=${searchTerm?searchTerm:""}`);
+  console.log(response)
   if(!response.ok) {
     throw { message: response.statusText, status: response.status};
   }
-  const data = await response.json();
-  return data;
+  const responseJson = await response.json();
+  return responseJson.payload;
 }
 
 export async function getProduct(id) {
@@ -13,8 +14,8 @@ export async function getProduct(id) {
   if(!response.ok) {
     throw { message: response.statusText, status: response.status};
   }  
-  const data = await response.json();
-  return data;
+  const responseJson = await response.json();
+  return responseJson.payload;
 }
 
 export async function getFeaturedList() {
@@ -23,6 +24,6 @@ export async function getFeaturedList() {
   if(!response.ok) {
     throw { message: response.statusText, status: response.status};
   }  
-  const data = await response.json();
-  return data;
+  const responseJson = await response.json();
+  return responseJson.payload;
 }

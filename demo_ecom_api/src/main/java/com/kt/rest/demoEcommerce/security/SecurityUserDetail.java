@@ -11,12 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class SecurityUserDetail implements UserDetails {
-    public final User user;
-
-    public SecurityUserDetail(User user) {
-        this.user = user;
-    }
+public record SecurityUserDetail(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,7 +54,7 @@ public class SecurityUserDetail implements UserDetails {
 
     private List<SimpleGrantedAuthority> generateSimpleGrantedAuthorities(Set<Role> roles) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: roles) {
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return authorities;

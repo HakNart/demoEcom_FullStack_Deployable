@@ -1,8 +1,6 @@
 package com.kt.rest.demoEcommerce.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,12 @@ public class Role {
     public static final String USER = "USER";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
+
+    public Role(String name) {
+        this.name = name;
+    }
 }

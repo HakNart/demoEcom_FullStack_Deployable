@@ -23,7 +23,7 @@ public class ProductController {
     public List<Product> getAllProducts(@RequestParam(name = "name_like", required = false, defaultValue = "") String name,
                                         @RequestParam(name = "featured", required = false, defaultValue = "") String featured) {
         if (!name.isEmpty()) {
-            return productRepository.findAllByNameContainingIgnoreCase(name);
+            return productRepository.findAllByProductNameContainingIgnoreCase(name);
         } else if (featured.equals("true")) {
             return productRepository.findAllByFeaturedTrue();
         } else {

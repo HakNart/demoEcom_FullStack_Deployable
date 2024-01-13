@@ -10,7 +10,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "productsCache")
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Cacheable
-    List<Product> findAllByNameContainingIgnoreCase(String name);
+    List<Product> findAllByProductNameContainingIgnoreCase(String name);
     @Cacheable
     List<Product> findAllByFeaturedTrue();
 }

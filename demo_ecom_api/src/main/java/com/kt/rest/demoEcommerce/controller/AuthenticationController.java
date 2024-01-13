@@ -14,13 +14,14 @@ public class AuthenticationController {
     private final AuthenticationService authService;
     private final UserRepository userRepository;
 
-    public AuthenticationController(AuthenticationService authService, UserRepository userRepository) {
-        this.authService = authService;
+    public AuthenticationController(AuthenticationService authenticationService, UserRepository userRepository) {
+        this.authService = authenticationService;
         this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
 //        return ResponseEntity.ok(authService.register(request));
         try {
             AuthenticationResponse authResponse = authService.register(request);

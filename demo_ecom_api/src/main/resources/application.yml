@@ -8,14 +8,14 @@ spring:
       mode: embedded
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         show_sql: true
 #    database: default
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
     username: ${DB_USERNAME}
@@ -25,6 +25,9 @@ spring:
       max-lifetime: 60000
       maximum-pool-size: 90
 
+access-token:
+  private: ${ACCESS_TOKEN_PRIVATE_KEY_PATH}
+  public: ${ACCESS_TOKEN_PUBLIC_KEY_PATH}
 #logging:
 #  pattern:
 #    console: %d{MM-dd HH:mm:ss} - %logger{36} - %msg%n

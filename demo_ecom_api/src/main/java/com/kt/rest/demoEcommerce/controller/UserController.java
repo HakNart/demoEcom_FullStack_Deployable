@@ -30,17 +30,17 @@ public class UserController {
         this.businessService = businessService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDetailResponse> getUser(@PathVariable Integer id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        UserDetailResponse userDetailResponse = UserDetailResponse.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .id(user.getId())
-                .build();
-        return ResponseEntity.ok(userDetailResponse);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UserDetailResponse> getUser(@PathVariable Integer id) {
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+//        UserDetailResponse userDetailResponse = UserDetailResponse.builder()
+//                .name(user.getName())
+//                .email(user.getEmail())
+//                .id(user.getId())
+//                .build();
+//        return ResponseEntity.ok(userDetailResponse);
+//    }
 
     @GetMapping("/orders")
     public ResponseEntity<List<OrderHistoryDetailResponse>> getUserOrders(@RequestParam(value = "user.id", required =true) Long id) {

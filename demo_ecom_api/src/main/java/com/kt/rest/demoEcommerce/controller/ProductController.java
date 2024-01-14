@@ -7,6 +7,7 @@ import com.kt.rest.demoEcommerce.model.dto.ProductDTO;
 import com.kt.rest.demoEcommerce.model.entity.Product;
 import com.kt.rest.demoEcommerce.repository.ProductRepository;
 import com.kt.rest.demoEcommerce.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +42,10 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Product> getOneProduct(@PathVariable Long id) {
-        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
+    public ResponseEntity<?> getOneProduct(@PathVariable Integer id) {
+//        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
+        ApiResponse response = ApiResponse.builder().success(productService.findOneProductById(id)).build();
+        return ResponseEntity.ok(response);
     }
 
 

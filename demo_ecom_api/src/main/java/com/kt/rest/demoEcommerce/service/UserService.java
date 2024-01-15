@@ -1,6 +1,7 @@
 package com.kt.rest.demoEcommerce.service;
 
 import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
+import com.kt.rest.demoEcommerce.model.dto.UserDetailResponse;
 import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.RoleRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
@@ -16,5 +17,13 @@ public class UserService {
     public User findUserByUserName(String username) {
         return userRepository.findOneByUsername(username).orElseThrow(() ->
                 new ResourceNotFoundException("User", "username", username));
+    }
+
+    public UserDetailResponse mapUserToUserDetailResponse(User user) {
+        return UserDetailResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .build();
     }
 }

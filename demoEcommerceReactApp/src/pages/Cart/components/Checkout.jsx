@@ -31,8 +31,9 @@ export const Checkout = ({setCheckout}) => {
 
     try {
       const data = await createOrder(cartList, total, user);
+      payload = data.payload
       clearCart();
-      navigate('/order-summary', {state: {data: data, status: true}})
+      navigate('/order-summary', {state: {data: payload, status: true}})
     } catch (e) {
       toast.error(e.message);
       navigate('/order-summary', {state: {status:false}});
@@ -58,7 +59,7 @@ export const Checkout = ({setCheckout}) => {
               <form onSubmit={handleOrderSubmit} className="space-y-6" >
                 <div>
                   <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name:</label>
-                  <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:value-gray-400 dark:text-white" value={user.name || "Undefined"} disabled required="" />
+                  <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:value-gray-400 dark:text-white" value={user.username || "Undefined"} disabled required="" />
                 </div>
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email:</label>

@@ -2,10 +2,7 @@ package com.kt.rest.demoEcommerce.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -23,6 +20,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @Column(name = "amount_paid")
@@ -34,7 +32,6 @@ public class Order {
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="order_product",
             joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    @JsonProperty("cartList")
     private Set<Product> orderItems;
 
 }

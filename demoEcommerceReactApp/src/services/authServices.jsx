@@ -66,7 +66,8 @@ export const getUser = async () => {
     }
   }
   // const response = await fetch(`${host}/660/users/${browserData.uid}`, requestOptions);
-  const response = await fetch(`${host}/users/${browserData.uid}`, requestOptions);
+  // const response = await fetch(`${host}/users/${browserData.uid}`, requestOptions);
+  const response = await fetch(`${host}/users/self`, requestOptions);
   if (!response.ok) {
     throw { message: response.statusText, status: response.status }; 
   }

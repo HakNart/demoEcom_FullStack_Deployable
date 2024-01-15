@@ -134,7 +134,7 @@ public class AuthenticationService {
     }
     private String getToken(User user) {
         Instant now = Instant.now();
-        long expiry = 36000L;
+        long expiry = 60*15; // 15 minutes
 
         String scope = user.getRoles().stream()
                 .map(role -> role.getName())

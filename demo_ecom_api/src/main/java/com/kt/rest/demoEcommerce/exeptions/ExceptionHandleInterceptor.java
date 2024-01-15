@@ -2,6 +2,7 @@ package com.kt.rest.demoEcommerce.exeptions;
 
 import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,7 @@ public class ExceptionHandleInterceptor {
                 ApiResponse.builder().fail(e.getMessage()).build()
         );
     }
+    // DataIntegrityViolationException.class
 
     // Catch all exception
     @ExceptionHandler(Exception.class)

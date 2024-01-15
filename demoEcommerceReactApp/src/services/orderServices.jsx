@@ -13,7 +13,7 @@ export async function getUserOrders(){
       headers: {"Content-Type": "application/json", Authorization: `Bearer ${browserData.token}`}
   }
   // const response = await fetch(`${host}/users/660/orders?user.id=${browserData.uid}`, requestOptions);
-  const response = await fetch(`${host}/users/orders?user.id=${browserData.uid}`, requestOptions);
+  const response = await fetch(`${host}/users/orders?userId=${browserData.uid}`, requestOptions);
   if(!response.ok){
       throw { message: response.statusText, status: response.status }; //eslint-disable-line
   }
@@ -34,6 +34,7 @@ export async function createOrder(cartList, total, user){
       // }
       userId: user.id,
   }
+  console.log(order)
   const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${browserData.token}` },

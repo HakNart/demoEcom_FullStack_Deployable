@@ -1,23 +1,25 @@
 package com.kt.rest.demoEcommerce.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kt.rest.demoEcommerce.model.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class OrderDetailResponse {
+public class CreateOrderRequestDTO {
+    @JsonProperty("cartList")
+    private Set<Product> cartItems;
+    private Integer userId;
+
     @JsonProperty("amount_paid")
     private BigDecimal amountPaid;
     private Integer quantity;
-    private Long id;
-
-    @JsonProperty("user")
-    private UserDetailResponse userDetail;
 }

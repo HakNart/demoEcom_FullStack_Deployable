@@ -5,7 +5,7 @@ export const OrderSuccess = ({data}) => {
     <section className="text-xl text-center max-w-4xl mx-auto my-10 py-5 dark:text-slate-100 border dark:border-slate-700 rounded">
         <div className="my-5">
             <p className="bi bi-check-circle text-green-600 text-7xl mb-5"></p>
-            <p>Thank you {data.user.name} for the order!</p>
+            <p>Thank you {data.user.username} for the order!</p>
             <p>Your Order ID: {data.id}</p>          
         </div>
         <div className="my-5">

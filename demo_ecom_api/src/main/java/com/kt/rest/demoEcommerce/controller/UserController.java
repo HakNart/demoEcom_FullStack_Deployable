@@ -1,14 +1,17 @@
 package com.kt.rest.demoEcommerce.controller;
 
-import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
-import com.kt.rest.demoEcommerce.model.entity.User;
+import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
 import com.kt.rest.demoEcommerce.model.dto.UserDetailResponse;
 import com.kt.rest.demoEcommerce.model.entity.Order;
-import com.kt.rest.demoEcommerce.model.dto.OrderHistoryDetailResponse;
+import com.kt.rest.demoEcommerce.model.dto.OrderHistoryDTO;
+import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.OrderRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.BusinessService;
+import com.kt.rest.demoEcommerce.service.OrderService;
+import com.kt.rest.demoEcommerce.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,38 +20,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
 
-    private final BusinessService businessService;
+    private final UserService userService;
+    private final OrderService orderService;
 
 
-    public UserController(UserRepository userRepository, OrderRepository orderRepository, BusinessService businessService) {
-        this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
-
-        this.businessService = businessService;
+    public UserController(UserService userService, OrderService orderService) {
+        this.userService = userService;
+        this.orderService = orderService;
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserDetailResponse> getUser(@PathVariable Integer id) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-//        UserDetailResponse userDetailResponse = UserDetailResponse.builder()
-//                .name(user.getName())
-//                .email(user.getEmail())
-//                .id(user.getId())
-//                .build();
-//        return ResponseEntity.ok(userDetailResponse);
-//    }
+    //  Return user's basic information
+    @GetMapping("/self")
+    public ResponseEntity<?> getSelfUser(Authentication authentication) {
+        User user = userService.findUserByUserName(authentication.getName());
+        UserDetailResponse userDetailResponse = userService.mapUserToUserDetailResponse(user);
+        return ResponseEntity.ok(userDetailResponse);
+    }
 
-    @GetMapping("/orders")
-    public ResponseEntity<List<OrderHistoryDetailResponse>> getUserOrders(@RequestParam(value = "user.id", required =true) Long id) {
-        List<Order> orderList = orderRepository.findAllByUserId(id);
-        List<OrderHistoryDetailResponse> orderHistoryDetailResponseList = new ArrayList<>();
+    // Return user's order history
+    @GetMapping("/self/orders")
+    public ResponseEntity<?> getUserOrderHistory(Authentication authentication) {
+        User user = userService.findUserByUserName(authentication.getName());
+        List<Order> orderList = orderService.findAllOrdersByUserId(user.getId());
+
+        List<OrderHistoryDTO> orderHistoryDTOList = new ArrayList<>();
         orderList.forEach(order -> {
-            orderHistoryDetailResponseList.add(businessService.createOrderHistoryDetailResponse(order));
+            orderHistoryDTOList.add(orderService.mapOrderToOrderHistoryDTO(order));
         });
-        return ResponseEntity.ok(orderHistoryDetailResponseList);
+        ApiResponse apiResponse = ApiResponse.builder().success(orderHistoryDTOList).build();
+        return ResponseEntity.ok(apiResponse);
     }
 }

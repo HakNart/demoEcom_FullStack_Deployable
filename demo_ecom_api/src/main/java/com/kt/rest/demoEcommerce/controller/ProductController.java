@@ -38,14 +38,15 @@ public class ProductController {
 //        } else {
 //            return productRepository.findAll();
 //        }
-        return ResponseEntity.ok(ApiResponse.builder().success(productDTOList).build());
+        ApiResponse apiResponse = ApiResponse.builder().success(productDTOList).build();
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getOneProduct(@PathVariable Integer id) {
 //        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
-        ApiResponse response = ApiResponse.builder().success(productService.findOneProductById(id)).build();
-        return ResponseEntity.ok(response);
+        ApiResponse apiResponse = ApiResponse.builder().success(productService.findOneProductById(id)).build();
+        return ResponseEntity.ok(apiResponse);
     }
 
 

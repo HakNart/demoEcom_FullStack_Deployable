@@ -11,10 +11,12 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class OrderCreateRequest {
+public class OrderHistoryDTO {
+    private Long id;
+
     @JsonProperty("cartList")
     private Set<Product> orderItems;
     private Integer userId;
@@ -22,5 +24,4 @@ public class OrderCreateRequest {
     @JsonProperty("amount_paid")
     private BigDecimal amountPaid;
     private Integer quantity;
-
 }

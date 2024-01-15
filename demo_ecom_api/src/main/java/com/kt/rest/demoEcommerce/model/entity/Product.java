@@ -1,5 +1,6 @@
 package com.kt.rest.demoEcommerce.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,7 @@ public class Product {
     private Integer rating;
 
     @Column(name = "in_stock")
+    @JsonProperty("in_stock")
     private Boolean inStock;
 
     @Column(name = "best_seller")

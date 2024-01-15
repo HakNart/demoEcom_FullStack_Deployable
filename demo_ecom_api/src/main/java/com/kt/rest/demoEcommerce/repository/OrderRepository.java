@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 //    @Query("select o from Order o join o.user u where u.id = :userId")
-    List<Order> findAllByUserId(Long userId);
+    List<Order> findAllByUserId(Integer userId);
 }

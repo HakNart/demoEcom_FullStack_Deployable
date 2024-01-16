@@ -56,7 +56,7 @@ public class UserDataLoader implements CommandLineRunner {
         }
         if (!optionalTestUser.isPresent()) {
             User testUser = User.builder()
-                    .username("Test user")
+                    .username("user1")
                     .email("test@email.com")
                     .password(passwordEncoder.encode("test123"))
                     .roles(Set.of(rUser))

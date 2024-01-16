@@ -2,12 +2,14 @@ package com.kt.rest.demoEcommerce.service;
 
 import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
 import com.kt.rest.demoEcommerce.model.auth.*;
+import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
 import com.kt.rest.demoEcommerce.model.entity.Role;
 import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.RoleRepository;
 import com.kt.rest.demoEcommerce.repository.TokenRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.security.SecurityUserDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -52,11 +55,16 @@ public class AuthenticationService {
         if (userRepository.existsByEmailOrUsername(request.email(), request.username())) {
             throw new IllegalArgumentException("email or username already exists");
         }
+        log.info("New user register request with username: {}", request.username());
         User user = mapRegistertoUser(request);
+        // Default role for new user is "USER"
+        Role role = roleRepository.getByName(Role.USER);
+        user.setRoles(Set.of(role));
+
         var savedUser = userRepository.save(user);
 //        var jwtToken = jwtService.generateToken(new SecurityUserDetail(user));
         var jwtToken = getToken(user);
-        saveUserToken(savedUser, jwtToken);
+//        saveUserToken(savedUser, jwtToken);AuthenticationResponse.builder().token(jwtToken).id(savedUser.getId()).build();
         return AuthenticationResponse.builder().token(jwtToken).id(savedUser.getId()).build();
     }
 
@@ -92,11 +100,11 @@ public class AuthenticationService {
                 .build();
     }
     private User mapRegistertoUser(RegisterRequest request) {
+        // No Role is set yet
         return User.builder()
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .roles(Set.of(new Role(Role.USER)))
                 .build();
     }
 

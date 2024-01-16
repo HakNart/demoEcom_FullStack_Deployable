@@ -8,16 +8,17 @@ export async function login(authDetail) {
 
   const response = await fetch(`${host}/auth/login`, requestOptions);
   if(!response.ok){
-      throw { message: "Bad Request", status: 400 }; 
+      const responseObject = await response.json();
+      const errorMessage = responseObject.message? responseObject.message: "Unknown error";
+      throw { message: errorMessage, status: response.status }; 
   }
-  const data = await response.json();
-
+  const responseObject = await response.json();
+  const data = responseObject.payload;
   if(data.accessToken){
       sessionStorage.setItem("token", JSON.stringify(data.accessToken));
 
       sessionStorage.setItem("uid", JSON.stringify(data.id));
   }
-
   return data;
 }
 
@@ -30,12 +31,12 @@ export async function register(authDetail){
   // const response = await fetch(`${host}/register`, requestOptions);
   const response = await fetch(`${host}/auth/register`, requestOptions);
   if(!response.ok){
-      const errorResponse = await response.json();
-      console.log(errorResponse);
-      throw { message: errorResponse.statusText, status: errorResponse.status }; 
+    const responseObject = await response.json();
+    const errorMessage = responseObject.message? responseObject.message: "Unknown error";
+    throw { message: errorMessage, status: response.status }; 
   }
-  const data = await response.json();
-  
+  const responseObject = await response.json();
+  const data = responseObject.payload;
   if(data.accessToken){
       sessionStorage.setItem("token", JSON.stringify(data.accessToken));
       // sessionStorage.setItem("uid", JSON.stringify(data.user.id));
@@ -68,9 +69,12 @@ export const getUser = async () => {
   // const response = await fetch(`${host}/660/users/${browserData.uid}`, requestOptions);
   // const response = await fetch(`${host}/users/${browserData.uid}`, requestOptions);
   const response = await fetch(`${host}/users/self`, requestOptions);
-  if (!response.ok) {
-    throw { message: response.statusText, status: response.status }; 
-  }
-  const data = await response.json();
+  if(!response.ok){
+    const responseObject = await response.json();
+    const errorMessage = responseObject.message? responseObject.message: "Unknown error";
+    throw { message: errorMessage, status: response.status }; 
+}
+  const responseObject = await response.json();
+  const data = responseObject.payload;
   return data;
 }

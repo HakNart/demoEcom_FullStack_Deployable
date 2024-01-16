@@ -13,11 +13,14 @@ export async function getUserOrders(){
       headers: {"Content-Type": "application/json", Authorization: `Bearer ${browserData.token}`}
   }
   // const response = await fetch(`${host}/users/660/orders?user.id=${browserData.uid}`, requestOptions);
-  const response = await fetch(`${host}/users/orders?userId=${browserData.uid}`, requestOptions);
+  const response = await fetch(`${host}/users/self/orders`, requestOptions);
   if(!response.ok){
-      throw { message: response.statusText, status: response.status }; //eslint-disable-line
-  }
-  const data = await response.json();
+    const responseObject = await response.json();
+    const errorMessage = responseObject.message? responseObject.message: "Unknown error";
+    throw { message: errorMessage, status: response.status }; 
+}
+  const responseObject = await response.json();
+  const data = responseObject.payload;
   return data;
 }
 
@@ -43,8 +46,11 @@ export async function createOrder(cartList, total, user){
   // const response = await fetch(`${host}/660/orders`, requestOptions);
   const response = await fetch(`${host}/orders`, requestOptions);
   if(!response.ok){
-      throw { message: response.statusText, status: response.status }; //eslint-disable-line
+    const responseObject = await response.json();
+    const errorMessage = responseObject.message? responseObject.message: "Unknown error";
+    throw { message: errorMessage, status: response.status }; 
   }
-  const data = await response.json();
+  const responseObject = await response.json();
+  const data = responseObject.payload;
   return data;
 }

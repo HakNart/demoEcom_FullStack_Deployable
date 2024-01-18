@@ -99,7 +99,7 @@ public class AuthenticationService {
                 .id(user.getId())
                 .build();
     }
-    private User mapRegistertoUser(RegisterRequest request) {
+    public User mapRegistertoUser(RegisterRequest request) {
         // No Role is set yet
         return User.builder()
                 .username(request.username())
@@ -140,7 +140,7 @@ public class AuthenticationService {
                 .build();
         tokenRepository.save(token);
     }
-    private String getToken(User user) {
+    public String getToken(User user) {
         Instant now = Instant.now();
         long expiry = 60*15; // 15 minutes
 

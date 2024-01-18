@@ -75,6 +75,7 @@ export const getUser = async () => {
     throw { message: errorMessage, status: response.status }; 
 }
   const responseObject = await response.json();
+  console.log(responseObject);
   const data = responseObject.payload;
   return data;
 }

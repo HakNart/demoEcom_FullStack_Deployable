@@ -12,6 +12,8 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -21,13 +23,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,6 +38,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -61,7 +65,8 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .httpBasic(httpBasic -> httpBasic.disable())
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+//                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new CustomAuthenticationConverter())))
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandler -> exceptionHandler
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
@@ -92,6 +97,8 @@ public class WebSecurityConfiguration {
 //        http.headers().frameOptions().sameOrigin();
         return http.build();
     }
+
+
     @Bean
     JwtDecoder jwtDecode() {
         return NimbusJwtDecoder.withPublicKey(keyUtils.getAccessTokenPublicKey()).build();
@@ -127,5 +134,14 @@ public class WebSecurityConfiguration {
         return source;
     }
 
+    static class CustomAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+        public AbstractAuthenticationToken convert(Jwt jwt) {
+            Collection<String> authorities = jwt.getClaimAsStringList("scope");
+            Collection<GrantedAuthority> grantedAuthorities = authorities.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+            return new JwtAuthenticationToken(jwt, grantedAuthorities);
+        }
+    }
 
 }

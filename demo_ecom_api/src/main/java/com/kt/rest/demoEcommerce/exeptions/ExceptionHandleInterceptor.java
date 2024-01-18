@@ -16,7 +16,7 @@ public class ExceptionHandleInterceptor {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse> handle(IllegalArgumentException e) {
-        log.info(e.getMessage(), e);
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ApiResponse.builder().fail(e.getMessage()).build()
         );

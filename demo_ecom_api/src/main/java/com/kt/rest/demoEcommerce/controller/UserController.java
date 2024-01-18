@@ -10,6 +10,7 @@ import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.BusinessService;
 import com.kt.rest.demoEcommerce.service.OrderService;
 import com.kt.rest.demoEcommerce.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/users")
 public class UserController {
 
@@ -34,6 +36,7 @@ public class UserController {
     @GetMapping("/self")
     public ResponseEntity<?> getSelfUser(Authentication authentication) {
         User user = userService.findUserByUserName(authentication.getName());
+        log.info("Authentication detail: {}", authentication.getAuthorities());
         UserDetailResponse userDetailResponse = userService.mapUserToUserDetailResponse(user);
         return ResponseEntity.ok(userDetailResponse);
     }

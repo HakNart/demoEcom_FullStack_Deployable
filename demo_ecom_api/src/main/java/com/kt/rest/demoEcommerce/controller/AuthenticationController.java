@@ -22,19 +22,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
-//        return ResponseEntity.ok(authService.register(request));
         var authPayload = authService.register(request);
-//        try {
-//            AuthenticationResponse authResponse = authService.register(request);
-//            return ResponseEntity.ok(authResponse);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(CustomErrorResponse.builder()
-//                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                            .statusText(e.getMessage())
-//                            .build());
-//        }
+
         var apiResponse = ApiResponse.builder().success(authPayload).build();
 
         return ResponseEntity.ok(apiResponse);
@@ -43,6 +32,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
         var authPayload = authService.login(request);
+
         var apiResponse = ApiResponse.builder().success(authPayload).build();
 
         return ResponseEntity.ok(apiResponse);

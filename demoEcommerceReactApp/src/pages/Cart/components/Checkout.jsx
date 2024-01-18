@@ -18,6 +18,7 @@ export const Checkout = ({setCheckout}) => {
     async function fetchData() {
       try {
         const readUser = await getUser();
+        console.log("User load %s", readUser)
         setUser(readUser);
       } catch (err) {
         toast.error(err.message);
@@ -31,9 +32,9 @@ export const Checkout = ({setCheckout}) => {
 
     try {
       const data = await createOrder(cartList, total, user);
-      payload = data.payload
+      console.log("data checkout: %s", data);
       clearCart();
-      navigate('/order-summary', {state: {data: payload, status: true}})
+      navigate('/order-summary', {state: {data: data, status: true}})
     } catch (e) {
       toast.error(e.message);
       navigate('/order-summary', {state: {status:false}});

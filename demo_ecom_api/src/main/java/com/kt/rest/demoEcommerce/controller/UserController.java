@@ -36,9 +36,12 @@ public class UserController {
     @GetMapping("/self")
     public ResponseEntity<?> getSelfUser(Authentication authentication) {
         User user = userService.findUserByUserName(authentication.getName());
-        log.info("Authentication detail: {}", authentication.getAuthorities());
+
         UserDetailResponse userDetailResponse = userService.mapUserToUserDetailResponse(user);
-        return ResponseEntity.ok(userDetailResponse);
+
+        ApiResponse apiResponse = ApiResponse.builder().success(userDetailResponse).build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     // Return user's order history

@@ -1,6 +1,22 @@
+spring:
+  sql:
+    init:
+      mode: embedded
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+    defer-datasource-initialization: true
+
+
 ACCESS_TOKEN_PRIVATE_KEY_PATH: "access-token-keys/access-token-private.key"
 ACCESS_TOKEN_PUBLIC_KEY_PATH: "access-token-keys/access-token-public.key"
 DB_HOST: "localhost"
 DB_USERNAME: "postgres"
 DB_PASSWORD: "nart123"
 DB_NAME: "demo_ecom"
+DB_PORT: 5432

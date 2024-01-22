@@ -4,6 +4,7 @@ import com.kt.rest.demoEcommerce.model.entity.Role;
 import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.RoleRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 @Profile("dev")
 @Component
+@Slf4j
 public class UserDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,6 +35,7 @@ public class UserDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         Optional<User> optionalAdmin = userRepository.findByEmail("admin@email.com");
         Optional<User> optionalTestUser = userRepository.findByEmail("test@email.com");
         Optional<Role> optionalRoleAdmin = roleRepository.findByName(Role.ADMIN);
@@ -65,6 +68,7 @@ public class UserDataLoader implements CommandLineRunner {
                     .build();
             userRepository.save(testUser);
         }
+        log.info("Dev data generated: {} {}", rUser, rAdmin);
 //
        ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("data.sql"));
        DatabasePopulatorUtils.execute(populator, dataSource);

@@ -5,6 +5,7 @@ import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.RoleRepository;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.Set;
 
+@Profile("dev")
 @Component
 public class UserDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;

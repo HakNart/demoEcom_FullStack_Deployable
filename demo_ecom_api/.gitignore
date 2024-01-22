@@ -12,12 +12,11 @@ target/
 .settings
 .springBeans
 .sts4-cache
-<<<<<<< HEAD
-=======
+
 
 ### Specific files ###
 application-prod.yml
->>>>>>> 8418b62 (Untrack prod config)
+
 
 ### IntelliJ IDEA ###
 .idea

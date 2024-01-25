@@ -70,8 +70,8 @@ public class WebSecurityConfiguration {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .authorizeHttpRequests(
                         auth -> {
-                            auth.requestMatchers("/auth/**").permitAll()
-                                    .requestMatchers("/products/**").permitAll()
+                            auth.requestMatchers("/api/v1/auth/**").permitAll()
+                                    .requestMatchers("/api/v1/products/**").permitAll()
                                     .anyRequest().authenticated();
                         }
                 );
@@ -100,5 +100,14 @@ public class WebSecurityConfiguration {
             return new JwtAuthenticationToken(jwt, grantedAuthorities);
         }
     }
-
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

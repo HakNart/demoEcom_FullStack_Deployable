@@ -1,4 +1,6 @@
-const host = import.meta.env.VITE_APP_HOST;
+const hostUrl = import.meta.env.VITE_APP_HOST;
+const api_version = "/api/v1"
+const host = `${hostUrl}${api_version}`
 
 function getSession() {
   const token = JSON.parse(sessionStorage.getItem("token"));

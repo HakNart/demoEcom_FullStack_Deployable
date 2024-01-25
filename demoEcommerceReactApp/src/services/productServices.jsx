@@ -1,4 +1,6 @@
-const host = import.meta.env.VITE_APP_HOST;
+const hostUrl = import.meta.env.VITE_APP_HOST;
+const api_version = "/api/v1"
+const host = `${hostUrl}${api_version}`
 export async function getProductList(searchTerm) {
   const response = await fetch(`${host}/products?name_like=${searchTerm?searchTerm:""}`);
   if(!response.ok){

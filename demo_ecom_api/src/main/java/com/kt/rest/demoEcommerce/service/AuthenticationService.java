@@ -48,10 +48,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
-//        if (userRepository.existsByEmail(request.getEmail())) {
-//            throw new EmailAlreadyExistsException("Email already exists: " + request.getEmail());
-//            request.
-//        }
+
         if (userRepository.existsByEmailOrUsername(request.email(), request.username())) {
             throw new IllegalArgumentException("email or username already exists");
         }
@@ -62,9 +59,7 @@ public class AuthenticationService {
         user.setRoles(Set.of(role));
 
         var savedUser = userRepository.save(user);
-//        var jwtToken = jwtService.generateToken(new SecurityUserDetail(user));
         var jwtToken = getToken(user);
-//        saveUserToken(savedUser, jwtToken);AuthenticationResponse.builder().token(jwtToken).id(savedUser.getId()).build();
         return AuthenticationResponse.builder().token(jwtToken).id(savedUser.getId()).build();
     }
 

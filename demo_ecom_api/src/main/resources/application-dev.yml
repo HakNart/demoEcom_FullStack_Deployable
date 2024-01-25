@@ -13,8 +13,8 @@ spring:
     defer-datasource-initialization: true
 
 
-ACCESS_TOKEN_PRIVATE_KEY_PATH: "access-token-keys/access-token-private.key"
-ACCESS_TOKEN_PUBLIC_KEY_PATH: "access-token-keys/access-token-public.key"
+ACCESS_TOKEN_PRIVATE_KEY_PATH: "access_token_keys/private_key.key"
+ACCESS_TOKEN_PUBLIC_KEY_PATH: "access_token_keys/public_key.key"
 DB_HOST: "localhost"
 DB_USERNAME: "postgres"
 DB_PASSWORD: "nart123"

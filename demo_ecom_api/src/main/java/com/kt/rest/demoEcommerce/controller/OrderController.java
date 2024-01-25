@@ -18,45 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("api/v1/orders")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
 
-    private final BusinessService businessService;
     private final UserService userService;
     private final OrderService orderService;
 
-    public OrderController(OrderRepository orderRepository, UserRepository userRepository, BusinessService businessService, UserService userService, OrderService orderService) {
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.businessService = businessService;
+    public OrderController(UserService userService, OrderService orderService) {
+
         this.userService = userService;
         this.orderService = orderService;
     }
 
     @PostMapping
     public ResponseEntity<?> createOrder(Authentication authentication, @RequestBody CreateOrderRequestDTO createdOrderRequest) {
-//        Optional<User> getUser = userRepository.findById(createdOrderRequest.getUserId());
-//        if(!getUser.isPresent()) {
-//            throw new ResourceNotFoundException("User not found");
-//        }
-//        User user = getUser.get();
-//
-//        Order order = Order.builder().user(user)
-//                        .amountPaid(createdOrderRequest.getAmountPaid())
-//                                .quantity(createdOrderRequest.getQuantity())
-//                                        .orderItems(createdOrderRequest.getCartItems()).build();
-//        orderRepository.save(order);
-//        UserDetailResponse userDetailResponse = businessService.createUserDetailResponse(user);
-//        CreateOrderResponseDTO createOrderResponseDTO = businessService.createOrderDetailResponse(order, userDetailResponse);
-//        return ResponseEntity.ok(createOrderResponseDTO);
         var requester = userService.findUserByUserName(authentication.getName());
         CreateOrderResponseDTO orderResponseDTO = orderService.createOrder(requester, createdOrderRequest);
         ApiResponse<Object> response = ApiResponse.builder().success(orderResponseDTO).build();
         return ResponseEntity.ok(response);
     }
-
 
 }

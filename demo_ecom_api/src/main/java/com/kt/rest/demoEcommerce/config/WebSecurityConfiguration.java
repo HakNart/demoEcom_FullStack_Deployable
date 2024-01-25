@@ -44,20 +44,17 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final KeyUtils keyUtils;
 
     public WebSecurityConfiguration( AuthenticationProvider authenticationProvider, PasswordEncoder passwordEncoder, UserRepository userRepository, KeyUtils keyUtils) {
-//        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.authenticationProvider = authenticationProvider;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.keyUtils = keyUtils;
     }
-
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,26 +75,8 @@ public class WebSecurityConfiguration {
                                     .anyRequest().authenticated();
                         }
                 );
-//        http.cors().disable();
-//        http.authorizeHttpRequests(
-//                auth -> {
-//                    auth.requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/products/**").permitAll()
-//                        .anyRequest().authenticated();
-//                }
-//        );
-//        http.sessionManagement(
-//                session ->
-//                        session.sessionCreationPolicy(
-//                                SessionCreationPolicy.STATELESS
-//                        )
-//        );
-//        http.authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.headers().frameOptions().sameOrigin();
         return http.build();
     }
-
 
     @Bean
     JwtDecoder jwtDecode() {
@@ -111,29 +90,7 @@ public class WebSecurityConfiguration {
         return new NimbusJwtEncoder(jwks);
     }
 
-//    @Bean
-//    PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(10);
-//    }
-//    @Bean
-//    AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setPasswordEncoder(passwordEncoder);
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        return new ProviderManager(authenticationProvider);
-//    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
+    // Generate authority from claim "scope" for the jwt string
     static class CustomAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
         public AbstractAuthenticationToken convert(Jwt jwt) {
             Collection<String> authorities = jwt.getClaimAsStringList("scope");

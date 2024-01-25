@@ -23,8 +23,13 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class KeyUtils {
-    final
-    Environment environment;
+    private static String PRIVATE_HEADER = "-----BEGIN PRIVATE KEY-----\n";
+    private static String PRIVATE_FOOTER = "\n-----END PRIVATE KEY-----\n";
+    private static String PUBLIC_HEADER = "-----BEGIN PUBLIC KEY-----\n";
+    private static String PUBLIC_FOOTER = "\n-----END PUBLIC KEY-----\n";
+    public static String ALGORITHM_RSA = "RSA";
+
+    final Environment environment;
 
     @Value("${access-token.private}")
     private String accessTokenPrivateKeyPath;
@@ -38,12 +43,77 @@ public class KeyUtils {
         this.environment = environment;
     }
 
+
+
     private KeyPair getAccessTokenKeyPair() {
         if (Objects.isNull(_accessTokenKeyPair)) {
-            _accessTokenKeyPair = getKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
+            _accessTokenKeyPair = loadKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
+//            _accessTokenKeyPair = loadKeyPairBase64(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
         }
         return _accessTokenKeyPair;
     }
+    private KeyPair loadKeyPair(String publicKeyPath, String privateKeyPath) {
+        KeyPair keyPair = getKeyPair(publicKeyPath, privateKeyPath);
+        if (keyPair != null) return keyPair;
+
+        // Only run non-prod active profile
+        File directory = new File("access_token_keys");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        try {
+            log.info("Generating new public and private keys: {}, {}", publicKeyPath, privateKeyPath);
+            keyPair = generateKeyPair(ALGORITHM_RSA,2048);
+            try (FileOutputStream fos = new FileOutputStream(publicKeyPath)) {
+                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyPair.getPublic().getEncoded());
+                fos.write(keySpec.getEncoded());
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(privateKeyPath)) {
+                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded());
+                fos.write(keySpec.getEncoded());
+            }
+        } catch (NoSuchAlgorithmException | IOException e) {
+            throw new RuntimeException("Problem generating the keys");
+        }
+
+        return keyPair;
+    }
+
+    private static void saveKeyBase64(String filePath, Key key, String header, String footer) {
+        try {
+            Base64.Encoder encoder = Base64.getEncoder();
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.write(header.getBytes());
+            fos.write(encoder.encodeToString(key.getEncoded()).getBytes());
+            fos.write(footer.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private KeyPair loadKeyPairBase64(String publicKeyPath, String privateKeyPath) {
+        KeyPair keyPair1 = getKeyPair(publicKeyPath, privateKeyPath);
+        if (keyPair1 != null) return keyPair1;
+        KeyPair keyPair;
+        File directory = new File("access-token-keys");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        try {
+            log.info("Generating new public and private keys: {}, {}", publicKeyPath, privateKeyPath);
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            keyPair = keyPairGenerator.generateKeyPair();
+
+            saveKeyToFile(keyPair.getPublic(), publicKeyPath, PUBLIC_HEADER, PUBLIC_FOOTER);
+            saveKeyToFile(keyPair.getPrivate(), privateKeyPath, PRIVATE_HEADER, PRIVATE_FOOTER);
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Problem generating the keys");
+        }
+        return keyPair;
+    }
+
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath) {
         KeyPair keyPair;
 
@@ -72,45 +142,45 @@ public class KeyUtils {
                 throw new RuntimeException("public and private keys don't exist");
             }
         }
+        return null;
+    }
 
-        File directory = new File("access-token-keys");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+    private static byte[] sanitizeKeyBase64(byte[] keyBytes, String header, String footer) {
         try {
-            log.info("Generating new public and private keys: {}, {}", publicKeyPath, privateKeyPath);
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
-            try (FileOutputStream fos = new FileOutputStream(publicKeyPath)) {
-//                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyPair.getPublic().getEncoded());
-//                fos.write("-----BEGIN PUBLIC KEY-----\n".getBytes());
-//                fos.write(Base64.getEncoder().encodeToString(keySpec.getEncoded()).getBytes());
-//                fos.write("-----BEGIN PUBLIC KEY-----\n".getBytes());
-                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyPair.getPublic().getEncoded());
-                fos.write(keySpec.getEncoded());
-
-            }
-
-            try (FileOutputStream fos = new FileOutputStream(privateKeyPath)) {
-//                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded());
-//                fos.write("-----BEGIN PRIVATE KEY-----\n".getBytes());
-//                fos.write(Base64.getEncoder().encodeToString(keySpec.getEncoded()).getBytes());
-//                fos.write("\n-----END PRIVATE KEY-----".getBytes());
-                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded());
-                fos.write(keySpec.getEncoded());
-            }
-        } catch (NoSuchAlgorithmException | IOException e) {
-            throw new RuntimeException("Problem generating the keys");
+            String keyString = new String(keyBytes);
+            keyString = keyString.replace(header, "");
+            keyString = keyString.replace(footer, "");
+            byte[] newKeyBytes = Base64.getDecoder().decode(keyString.getBytes());
+            return newKeyBytes;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        return keyPair;
+
+    }
+    private static KeyPair generateKeyPair(String algorithm,int keySize) throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
+        keyPairGenerator.initialize(keySize);
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    private static void saveKeyToFile(Key key, String filePath, String header, String footer) {
+        try {
+            byte[] keyBytes = key.getEncoded();
+            try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                fos.write(header.getBytes());
+                fos.write(Base64.getEncoder().encodeToString(keyBytes).getBytes());
+                fos.write(footer.getBytes());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RSAPublicKey getAccessTokenPublicKey() {
         return (RSAPublicKey) getAccessTokenKeyPair().getPublic();
-    };
+    }
     public RSAPrivateKey getAccessTokenPrivateKey() {
         return (RSAPrivateKey) getAccessTokenKeyPair().getPrivate();
-    };
+    }
 }

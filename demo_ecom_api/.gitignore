@@ -14,9 +14,9 @@ target/
 .sts4-cache
 
 
-### Specific files ###
+### Production-specific files ###
 application-prod.yml
-
+access_token_keys
 
 ### IntelliJ IDEA ###
 .idea

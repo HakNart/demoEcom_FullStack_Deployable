@@ -48,7 +48,7 @@ public class UserIntegrationTest {
         String jwtToken = authenticationService.getToken(user);
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/auth/register")
+        ResultActions resultActions = mockMvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)));
 

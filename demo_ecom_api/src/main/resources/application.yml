@@ -10,6 +10,8 @@ spring:
     hikari:
       max-lifetime: 60000
       maximum-pool-size: 90
+  profiles:
+    active: @activeProfile@
 #  jpa:
 #    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
 

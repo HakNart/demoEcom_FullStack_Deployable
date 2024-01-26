@@ -60,7 +60,7 @@ public class UserControllerTest {
         when(authenticationService.login(any())).thenReturn(any(AuthenticationResponse.class));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/auth/register")
+        ResultActions resultActions = mockMvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)));
 
@@ -77,7 +77,7 @@ public class UserControllerTest {
         // when
         when(authenticationService.register(any())).thenThrow(new IllegalArgumentException("email or username already exists"));
 
-        ResultActions resultActions = mockMvc.perform(post("/auth/register")
+        ResultActions resultActions = mockMvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)));
 

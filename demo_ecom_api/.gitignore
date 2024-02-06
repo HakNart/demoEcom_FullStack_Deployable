@@ -14,9 +14,7 @@ target/
 .sts4-cache
 
 
-### Production-specific files ###
-application-prod.yml
-access_token_keys
+
 
 ### IntelliJ IDEA ###
 .idea
@@ -38,3 +36,8 @@ build/
 .vscode/
 
 .env
+
+### Production-specific files ###
+application-prod.yml
+access_token_keys
+private_configs

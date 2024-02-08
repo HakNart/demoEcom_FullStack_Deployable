@@ -34,14 +34,14 @@ jobs:
 
             -   name: Copy jar file to VPS directory
                 uses: appleboy/scp-action@master
-                env:
+                with:
                     host: ${{ secrets.VPS_HOST }}
                     username: ${{ secrets.VPS_USERNAME }}
                     key: ${{ secrets.SSH_PRIVATE_KEY }}
                     port: ${{ secrets.VPS_PORT }}
-                with:
-                    source: demo_ecom_api/target/*.jar
+                    source: "./demo_ecom_api/target/*.jar"
                     target: "~/webapp/demoEcom/backend"
+                    strip_components: 1 #Remove the leading path elements
 
     deploy:
         needs: backend_test

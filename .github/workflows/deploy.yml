@@ -28,6 +28,7 @@ jobs:
                 run: |
                     export SPRING_PROFILES_ACTIVE=test
                     mvn verify
+                    ls -la
 
             -   name: Stop PostgreSQL Container
                 run: docker stop test_database

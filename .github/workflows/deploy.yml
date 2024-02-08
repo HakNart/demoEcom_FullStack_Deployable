@@ -27,10 +27,19 @@ jobs:
                 working-directory: ./demo_ecom_api 
                 run: |
                     export SPRING_PROFILES_ACTIVE=test
-                    mvn verify
+                    mvn test
 
             -   name: Stop PostgreSQL Container
                 run: docker stop test_database
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v1
+                
+            -   name: Build jar file
+                run: mvn package -DskipTests
 
             -   name: Copy jar file to VPS directory
                 uses: appleboy/scp-action@master

@@ -41,7 +41,7 @@ jobs:
                     port: ${{ secrets.VPS_PORT }}
                     source: "./demo_ecom_api/target/*.jar"
                     target: "~/webapp/demoEcom/backend"
-                    strip_components: 1 #Remove the leading path elements
+                    strip_components: 2 #Remove the leading path elements
 
     deploy:
         needs: backend_test

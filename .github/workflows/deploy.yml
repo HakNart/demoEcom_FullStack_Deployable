@@ -14,9 +14,12 @@ jobs:
             uses: actions/checkout@v1
             
         -   name: Set up JDK 17
-            uses: actions/setup-java@v2
+            uses: actions/setup-java@v3
             with:
-                java-version: 17
+                java-version: '17'
+                distribution: 'temurin'
+                cache: maven
+
 
         -   name: Start PostgresSQL Container
             run: docker run -d --name test_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test_db 7100:5432 postgres

@@ -1,0 +1,28 @@
+﻿name: CI/CD Pipeline
+
+on: 
+    push: 
+        branches:
+            -main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+        -   name: Checkout repository
+            uses: actions/checkout@v1
+            
+        -   name: Set up JDK 17
+            uses: actions/setup-java@v2
+            with:
+                java-version: 17
+
+        -   name: Start PostgresSQL Container
+            run: docker run -d --name test_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test_db 7100:5432 postgres
+        
+        -   name: Run Tests
+            run: mvn verify
+
+        -   name: Stop PostgreSQL Container
+            run: docker stop test_database

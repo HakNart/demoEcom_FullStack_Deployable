@@ -10,26 +10,44 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        -   name: Checkout repository
-            uses: actions/checkout@v1
+            -   name: Checkout repository
+                uses: actions/checkout@v1
             
-        -   name: Set up JDK 17
-            uses: actions/setup-java@v3
-            with:
-                java-version: '17'
-                distribution: 'temurin'
-                cache: maven
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '17'
+                    distribution: 'temurin'
+                    cache: maven
 
-
-        -   name: Start PostgresSQL Container
-            run: docker run -d --name test_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test_db -p 7100:5432 postgres
+            -   name: Start PostgresSQL Container
+                run: docker run -d --name test_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test_db -p 7100:5432 postgres
             
+            -   name: Set profile to test and Run Tests
+                working-directory: ./demo_ecom_api 
+                run: |
+                    export SPRING_PROFILES_ACTIVE=test
+                    mvn verify
 
-        -   name: Set profile to test and Run Tests
-            working-directory: ./demo_ecom_api 
-            run: |
-                export SPRING_PROFILES_ACTIVE=test
-                mvn verify
+            -   name: Stop PostgreSQL Container
+                run: docker stop test_database
 
-        -   name: Stop PostgreSQL Container
-            run: docker stop test_database
+    deploy:
+        needs: backend_test
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Deploying to VPS
+                uses: appleboy/ssh-action@master
+                with:
+                    host: ${{ secrets.VPS_HOST }}
+                    username: ${{ secrets.VPS_USERNAME }}
+                    key: ${{ secrets.SSH_PRIVATE_KEY }}
+                    port: ${{ secrets.VPS_PORT }}
+                    scripts: |
+                        sudo pm2 stop backendDemoEcom
+                        scp target/demoEcommerce-0.0.1-SNAPSHOT.jar ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/webapp/demoEcom/backend
+                        cd ~/webapp/demoEcom/backend
+                        sudo pm2 start run_backend_service.sh --name=backendDemoEcom
+
+                        

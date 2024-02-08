@@ -45,9 +45,9 @@ jobs:
                     key: ${{ secrets.SSH_PRIVATE_KEY }}
                     port: ${{ secrets.VPS_PORT }}
                     scripts: |
-                        sudo pm2 stop backendDemoEcom
-                        scp target/demoEcommerce-0.0.1-SNAPSHOT.jar ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/webapp/demoEcom/backend
                         cd ~/webapp/demoEcom/backend
+                        sudo pm2 stop backendDemoEcom
+                        scp demo_ecom_api/target/demoEcommerce-0.0.1-SNAPSHOT.jar ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/webapp/demoEcom/backend
                         sudo pm2 start run_backend_service.sh --name=backendDemoEcom
 
-                        
+

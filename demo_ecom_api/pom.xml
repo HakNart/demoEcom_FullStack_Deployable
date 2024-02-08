@@ -16,20 +16,20 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<activeProfile>dev</activeProfile>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<activeProfile>prod</activeProfile>
-			</properties>
-		</profile>
-	</profiles>
+<!--	<profiles>-->
+<!--		<profile>-->
+<!--			<id>dev</id>-->
+<!--			<properties>-->
+<!--				<activeProfile>dev</activeProfile>-->
+<!--			</properties>-->
+<!--		</profile>-->
+<!--		<profile>-->
+<!--			<id>prod</id>-->
+<!--			<properties>-->
+<!--				<activeProfile>prod</activeProfile>-->
+<!--			</properties>-->
+<!--		</profile>-->
+<!--	</profiles>-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -102,6 +102,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.17.6</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -114,6 +120,16 @@
 				</configuration>
 
 			</plugin>
+<!--			When mvn run -> it will run the argLine-->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-surefire-plugin</artifactId>-->
+<!--				<version>3.0.0</version>-->
+
+<!--				<configuration>-->
+<!--					<argLine>-Dspring.profiles.active=test</argLine>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

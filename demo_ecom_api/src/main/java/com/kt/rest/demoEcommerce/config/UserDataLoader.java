@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.Set;
 
-@Profile("dev")
+@Profile({"default","dev","test"})
 @Component
 @Slf4j
 public class UserDataLoader implements CommandLineRunner {
@@ -68,7 +68,7 @@ public class UserDataLoader implements CommandLineRunner {
                     .build();
             userRepository.save(testUser);
         }
-        log.info("Dev data generated: {} {}", rUser, rAdmin);
+        log.info("Mock users data generated: {} {}", rUser, rAdmin);
 //
        ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("data.sql"));
        DatabasePopulatorUtils.execute(populator, dataSource);

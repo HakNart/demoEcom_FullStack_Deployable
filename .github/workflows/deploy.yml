@@ -39,7 +39,7 @@ jobs:
                     username: ${{ secrets.VPS_USERNAME }}
                     key: ${{ secrets.SSH_PRIVATE_KEY }}
                     port: ${{ secrets.VPS_PORT }}
-                    source: "./demo_ecom_api/target/demoEcommerce-0.0.1-SNAPSHOT.jar"
+                    source: "/demo_ecom_api/target/demoEcommerce-0.0.1-SNAPSHOT.jar"
                     target: "~/webapp/demoEcom/backend"
 
     deploy:

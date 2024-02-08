@@ -48,8 +48,11 @@ jobs:
                         whoami
                         ls -al
                         cd ~/webapp/demoEcom/backend
+                        echo "SHOULD BE IN BACKEND DIRECTORY"
+                        ls -al
                         pm2 stop backendDemoEcom || true
                         scp -P ${{ secrets.VPS_PORT }} demo_ecom_api/target/demoEcommerce-0.0.1-SNAPSHOT.jar ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/webapp/demoEcom/backend
+                        echo "SHOULD HAVE THE JAR FILE"
                         pm2 start run_backend_service.sh --name=backendDemoEcom
 
 

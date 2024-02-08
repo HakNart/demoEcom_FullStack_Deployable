@@ -32,12 +32,20 @@ jobs:
             -   name: Stop PostgreSQL Container
                 run: docker stop test_database
     build:
+        needs: backend_test
         runs-on: ubuntu-latest
 
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v1
-                
+            
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '17'
+                    distribution: 'temurin'
+                    cache: maven
+
             -   name: Build jar file
                 run: mvn package -DskipTests
 
@@ -53,7 +61,7 @@ jobs:
                     strip_components: 2 #Remove the leading path elements
 
     deploy:
-        needs: backend_test
+        needs: build
         runs-on: ubuntu-latest
 
         steps:

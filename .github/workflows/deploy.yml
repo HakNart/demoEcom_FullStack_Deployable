@@ -47,6 +47,7 @@ jobs:
                     cache: maven
 
             -   name: Build jar file
+                working-directory: ./demo_ecom_api 
                 run: mvn package -DskipTests
 
             -   name: Copy jar file to VPS directory

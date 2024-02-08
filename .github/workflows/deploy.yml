@@ -23,13 +23,13 @@ jobs:
 
         -   name: Start PostgresSQL Container
             run: docker run -d --name test_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test_db -p 7100:5432 postgres
-                
-        -   name: Set Spring Profile to Test
-            run: export SPRING_PROFILES_ACTIVE=test
+            
 
-        -   name: Run Tests
+        -   name: Set profile to test and Run Tests
             working-directory: ./demo_ecom_api 
-            run: mvn verify
+            run: |
+                export SPRING_PROFILES_ACTIVE=test
+                mvn verify
 
         -   name: Stop PostgreSQL Container
             run: docker stop test_database

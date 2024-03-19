@@ -34,15 +34,17 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final JwtEncoder jwtEncoder;
+    private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, TokenRepository tokenRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, JwtEncoder jwtEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, TokenRepository tokenRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, JwtEncoder jwtEncoder, RefreshTokenService refreshTokenService, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.jwtEncoder = jwtEncoder;
+        this.refreshTokenService = refreshTokenService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
@@ -59,18 +61,12 @@ public class AuthenticationService {
         user.setRoles(Set.of(role));
 
         var savedUser = userRepository.save(user);
-        var jwtToken = getToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).id(savedUser.getId()).build();
+        var authResponse = createAuthenticationResponseFromValidUser(savedUser);
+        return authResponse;
     }
 
     public AuthenticationResponse login(AuthenticationRequest request) {
-        // Authenticate user
-//        authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(
-//                request.getEmail(),
-//                request.getPassword()
-//        ));
-//        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-//        var jwtToken = jwtService.generateToken(user);
+
         var username = request.getUsername();
         var password = request.getPassword();
         if (username == null || username.isBlank()) {
@@ -84,15 +80,9 @@ public class AuthenticationService {
                 .findOneByUsername(username)
                         .filter(u -> passwordEncoder.matches(password, u.getPassword()))
                                 .orElseThrow(() -> new IllegalArgumentException("invalid username or password"));
-        var jwtToken = getToken(user);
-        // Remove existing token of the user, the issue a new one
-//        revokeAllUserTokens(user);
-//        saveUserToken(user, jwtToken);
 
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .id(user.getId())
-                .build();
+        var authResponse = createAuthenticationResponseFromValidUser(user);
+        return authResponse;
     }
     public User mapRegistertoUser(RegisterRequest request) {
         // No Role is set yet
@@ -103,15 +93,14 @@ public class AuthenticationService {
                 .build();
     }
 
-//    @Async
-//    public CompletableFuture<User> findUser(String email) {
-//        Optional<User> user = userRepository.findByEmail(email);
-//        if (user.isPresent()) {
-//            return CompletableFuture.completedFuture(user.get());
-//        } else {
-//            return CompletableFuture.failedFuture( new ResourceNotFoundException("User not found"));
-//        }
-//    }
+    public AuthenticationResponse createAuthenticationResponseFromValidUser(User user) {
+        var jwtToken = getToken(user);
+        var rToken = refreshTokenService.createRefreshToken(user.getUsername());
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .refreshToken(rToken.getToken())
+                .id(user.getId()).build();
+    }
 
     // Remove all the tokens associated with the user
     private void revokeAllUserTokens(User user) {
@@ -136,19 +125,20 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
     public String getToken(User user) {
-        Instant now = Instant.now();
-        long expiry = 60*15; // 15 minutes
-
-        String scope = user.getRoles().stream()
-                .map(role -> role.getName())
-                .collect(Collectors.joining(" "));
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiry))
-                .subject(user.getUsername()) // this is value of authentication.getName()
-                .claim("scope", scope)
-                .build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+//        Instant now = Instant.now();
+//        long expiry = 10; // 15 minutes
+//
+//        String scope = user.getRoles().stream()
+//                .map(role -> role.getName())
+//                .collect(Collectors.joining(" "));
+//        JwtClaimsSet claims = JwtClaimsSet.builder()
+//                .issuer("self")
+//                .issuedAt(now)
+//                .expiresAt(now.plusSeconds(expiry))
+//                .subject(user.getUsername()) // this is value of authentication.getName()
+//                .claim("scope", scope)
+//                .build();
+//        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtService.getToken(user);
     }
 }

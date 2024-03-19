@@ -61,7 +61,6 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(corConfig -> corConfig.configurationSource(corsConfigurationSource()))
                 .httpBasic(httpBasic -> httpBasic.disable())
-//                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // This
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new CustomAuthenticationConverter())))
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandler -> exceptionHandler
@@ -101,15 +100,21 @@ public class WebSecurityConfiguration {
             return new JwtAuthenticationToken(jwt, grantedAuthorities);
         }
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
         configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
         log.info("Cors configuration set up.");
+        log.info("Allowed orgins: {}", configuration.getAllowedOrigins());
+        log.info("Allow methods: {}", configuration.getAllowedMethods());
         return source;
     }
 

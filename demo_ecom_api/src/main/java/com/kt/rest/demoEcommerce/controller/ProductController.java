@@ -1,13 +1,12 @@
 package com.kt.rest.demoEcommerce.controller;
 
 
-import com.kt.rest.demoEcommerce.exeptions.ProductNotFoundException;
+
 import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
 import com.kt.rest.demoEcommerce.model.dto.ProductDTO;
-import com.kt.rest.demoEcommerce.model.entity.Product;
 import com.kt.rest.demoEcommerce.repository.ProductRepository;
 import com.kt.rest.demoEcommerce.service.ProductService;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

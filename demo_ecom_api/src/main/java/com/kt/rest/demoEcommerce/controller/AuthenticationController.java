@@ -5,6 +5,7 @@ import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
 import com.kt.rest.demoEcommerce.model.dto.CustomErrorResponse;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.AuthenticationService;
+import com.kt.rest.demoEcommerce.service.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final AuthenticationService authService;
+    private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
 
-    public AuthenticationController(AuthenticationService authenticationService, UserRepository userRepository) {
+    public AuthenticationController(AuthenticationService authenticationService, RefreshTokenService refreshTokenService, UserRepository userRepository) {
         this.authService = authenticationService;
+        this.refreshTokenService = refreshTokenService;
         this.userRepository = userRepository;
     }
 
@@ -25,7 +28,6 @@ public class AuthenticationController {
         var authPayload = authService.register(request);
 
         var apiResponse = ApiResponse.builder().success(authPayload).build();
-
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -34,9 +36,15 @@ public class AuthenticationController {
         var authPayload = authService.login(request);
 
         var apiResponse = ApiResponse.builder().success(authPayload).build();
-
         return ResponseEntity.ok(apiResponse);
     }
 
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO) {
+        var authPayload = refreshTokenService.doRefreshToken(refreshTokenRequestDTO.refreshToken());
+
+        var apiResponse = ApiResponse.builder().success(authPayload).build();
+        return ResponseEntity.ok(apiResponse);
+    }
 
 }

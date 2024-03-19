@@ -6,9 +6,7 @@ spring:
       mode: embedded
   jpa:
     show-sql: false
-
-
-
+  # Set template for datasource. Values to be provided by environment properties
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
@@ -27,11 +25,11 @@ access-token:
 web:
   cors:
     allowed-origins:
-      - "http://localhost:8080"
-      - "*"
+      - "*" # allow all origins
     allowed-methods:
       - "GET"
       - "POST"
       - "PUT"
       - "DELETE"
+      - "*"
 

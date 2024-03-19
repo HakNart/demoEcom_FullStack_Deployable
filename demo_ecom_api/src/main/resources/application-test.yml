@@ -1,15 +1,9 @@
+# This profile is only used for docker postgresql db during ci procedure
+# Do not use for local environment
 spring:
-  sql:
-    init:
-      mode: embedded
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: false
-        show_sql: false
     defer-datasource-initialization: true
 
 

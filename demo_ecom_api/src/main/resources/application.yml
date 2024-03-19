@@ -1,6 +1,13 @@
 spring:
   main:
     banner-mode: off
+  sql:
+    init:
+      mode: embedded
+  jpa:
+    show-sql: false
+
+
 
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -10,14 +17,21 @@ spring:
     hikari:
       max-lifetime: 60000
       maximum-pool-size: 90
-#  profiles:
-#    active: @activeProfile@
-#  jpa:
-#    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+
 
 access-token:
   private: ${ACCESS_TOKEN_PRIVATE_KEY_PATH:#{'access_token_keys/private_key.key'}}
   public: ${ACCESS_TOKEN_PUBLIC_KEY_PATH:#{'access_token_keys/public_key.key'}}
-#logging:
-#  pattern:
-#    console: %d{MM-dd HH:mm:ss} - %logger{36} - %msg%n
+
+# Default cors config
+web:
+  cors:
+    allowed-origins:
+      - "http://localhost:8080"
+      - "*"
+    allowed-methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+

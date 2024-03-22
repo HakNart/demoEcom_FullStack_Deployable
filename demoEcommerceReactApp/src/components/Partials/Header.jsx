@@ -5,12 +5,14 @@ import { useCart } from '../../context/CartContext';
 import { DropdownLoggedIn } from '../Elements/DropdownLoggedIn';
 import { DropdownnLoggedOut } from '../Elements/DropdownnLoggedOut';
 import { Search } from '../Sections/Search'
+import { useAuth } from '../../context/AuthContext';
 
 export function Header() {
   const  {cartList} = useCart();
   const [searchSection, setSearchSection] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-  const token = JSON.parse(sessionStorage.getItem("token"));
+  // const token = JSON.parse(sessionStorage.getItem("token"));
+  const {isAuthenticated} = useAuth();
 
 
   // Setting: mode (*implement later)
@@ -37,7 +39,7 @@ export function Header() {
             </Link>
             
             <span onClick={()=> setDropdown(!dropdown)} className="cursor-pointer text-xl text-gray-800 dark:text-white mr-5 bi bi-person-circle"></span>
-            {dropdown && (token? <DropdownLoggedIn setDropdown={setDropdown}/>: <DropdownnLoggedOut setDropdown={setDropdown}/>)}
+            {dropdown && (isAuthenticated? <DropdownLoggedIn setDropdown={setDropdown}/>: <DropdownnLoggedOut setDropdown={setDropdown}/>)}
             
           </div>
         </div>

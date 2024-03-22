@@ -82,7 +82,7 @@ public class JwtService {
 
     public String getToken(User user) {
         Instant now = Instant.now();
-        long expiry = 10; // 15 minutes
+        long expiry = 60*5; // 5 minutes
 
         String scope = user.getRoles().stream()
                 .map(role -> role.getName())

@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext';
+import { logout } from '../../services/authServices';
+import { useAuth } from '../../context/AuthContext';
 
 export const DropdownLoggedIn = ({setDropdown}) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const {clearCart} = useCart();
+  const {isAuthenticated, doLogout} = useAuth();
 
-
-  useEffect(() =>{
-    async function fetchData() {
-      const response = await fetch("")
-    }
-  }, [])
+  // useEffect(() =>{
+  //   async function fetchData() {
+  //     const response = await fetch("")
+  //   }
+  // }, [])
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("uid");
+    doLogout();
     clearCart();
     setDropdown(false);
-    navigate("/");
   }
   return (
     <div id="dropdownAvatar" className="select-none	absolute top-10 right-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">

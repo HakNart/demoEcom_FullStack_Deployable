@@ -3,6 +3,7 @@ package com.kt.rest.demoEcommerce.service;
 import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
 import com.kt.rest.demoEcommerce.model.auth.*;
 import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
+import com.kt.rest.demoEcommerce.model.entity.RefreshToken;
 import com.kt.rest.demoEcommerce.model.entity.Role;
 import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.RoleRepository;
@@ -95,7 +96,10 @@ public class AuthenticationService {
 
     public AuthenticationResponse createAuthenticationResponseFromValidUser(User user) {
         var jwtToken = getToken(user);
-        var rToken = refreshTokenService.createRefreshToken(user.getUsername());
+
+        var rToken = refreshTokenService.findByUser(user)
+                .orElseGet(() -> refreshTokenService.createRefreshToken(user.getUsername()));
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refreshToken(rToken.getToken())

@@ -21,3 +21,17 @@ DB_USERNAME: "postgres"
 DB_PASSWORD: "nart123"
 DB_NAME: "demo_ecom"
 DB_PORT: 5432
+
+# Default cors config
+web:
+  cors:
+    allowed-origins:
+      #- "*" # allow all origins, not allow when credentials:true (for HttpOnly cookies)
+      - "http://127.0.0.1:3000"
+      - "http://localhost:3000"
+    allowed-methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "*"

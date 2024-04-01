@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useTitle } from '../hooks/useTitle';
-import { register } from '../services/authServices';
+import { useRegister } from '../hooks/useRegister';
+// import { register } from '../services/authServices';
 
 export  function Register() {
   useTitle("Register");
-  const navigate = useNavigate();
+  const {register} = useRegister();
 
   const handleRegister = async (event) => {
     
@@ -17,10 +18,9 @@ export  function Register() {
       password: event.target.password.value,
     }
     try {
-      const getUserRegister = await register(authDetail);
-      getUserRegister.accessToken ? navigate("/products"): toast.error(getUserRegister);
+      await register(authDetail);
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err);
     }
 
   }

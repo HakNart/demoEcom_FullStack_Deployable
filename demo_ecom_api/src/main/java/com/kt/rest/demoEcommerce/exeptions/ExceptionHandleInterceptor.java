@@ -38,13 +38,13 @@ public class ExceptionHandleInterceptor {
         );
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiResponse> handle(RuntimeException e) {
-        log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ApiResponse.builder().fail(e.getMessage()).build()
-        );
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ApiResponse> handle(RuntimeException e) {
+//        log.info(e.getMessage());
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+//                ApiResponse.builder().fail(e.getMessage()).build()
+//        );
+//    }
     // DataIntegrityViolationException.class
 
     // Catch all exception

@@ -68,7 +68,9 @@ public class WebSecurityConfiguration {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .authorizeHttpRequests(
                         auth -> {
-                            auth.requestMatchers("/api/v1/auth/**").permitAll()
+                            auth
+                                    .requestMatchers("/api/v1/auth/logout").authenticated()
+                                    .requestMatchers("/api/v1/auth/**").permitAll()
                                     .requestMatchers("/api/v1/products/**").permitAll()
                                     .anyRequest().authenticated();
                         }
@@ -107,6 +109,7 @@ public class WebSecurityConfiguration {
 
         configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
         configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+        configuration.setAllowCredentials(true);
 
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

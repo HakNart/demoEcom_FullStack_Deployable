@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCart } from '../../../context/CartContext'
-import { getUser } from '../../../services/authServices';
+import { AuthService } from '../../../services/authServices';
 import { createOrder } from '../../../services/orderServices';
 
 export const Checkout = ({setCheckout}) => {
@@ -17,7 +17,7 @@ export const Checkout = ({setCheckout}) => {
 
     async function fetchData() {
       try {
-        const readUser = await getUser();
+        const readUser = await AuthService.getUser();
         // console.log("User load %s", readUser)
         setUser(readUser);
       } catch (err) {

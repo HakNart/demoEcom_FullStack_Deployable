@@ -1,5 +1,6 @@
 package com.kt.rest.demoEcommerce.service;
 
+import com.kt.rest.demoEcommerce.exeptions.ResourceNotFoundException;
 import com.kt.rest.demoEcommerce.model.dto.CreateOrderRequestDTO;
 import com.kt.rest.demoEcommerce.model.dto.CreateOrderResponseDTO;
 import com.kt.rest.demoEcommerce.model.dto.OrderHistoryDTO;
@@ -62,5 +63,10 @@ public class OrderService {
                 .quantity(order.getQuantity())
                 .orderItems(order.getOrderItems())
                 .build();
+    }
+
+    public Order findOneOrderById(Long id) {
+        return orderRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Order", "order id", id));
     }
 }

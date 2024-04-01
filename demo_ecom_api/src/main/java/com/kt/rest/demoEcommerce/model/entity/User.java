@@ -1,6 +1,5 @@
 package com.kt.rest.demoEcommerce.model.entity;
 
-import com.kt.rest.demoEcommerce.model.auth.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,8 +43,6 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();

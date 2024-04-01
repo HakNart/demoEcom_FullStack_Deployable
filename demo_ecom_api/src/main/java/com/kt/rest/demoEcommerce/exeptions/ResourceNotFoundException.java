@@ -6,7 +6,7 @@ public class ResourceNotFoundException extends NoSuchElementException {
     private String resourceName;
     private String resourceField;
     private String resourceFieldValue;
-    private int resourceFieldId;
+    private Number resourceFieldId;
     public ResourceNotFoundException() {}
     public ResourceNotFoundException(String message) {
         super(message);
@@ -19,7 +19,7 @@ public class ResourceNotFoundException extends NoSuchElementException {
         this.resourceFieldValue = resourceFieldValue;
     }
 
-    public ResourceNotFoundException (String resourceName, String resourceField, int resourceFieldId) {
+    public ResourceNotFoundException (String resourceName, String resourceField, Number resourceFieldId) {
         super(String.format("%s not found with %s: %s", resourceName, resourceField, resourceFieldId));
         this.resourceName = resourceName;
         this.resourceField = resourceField;

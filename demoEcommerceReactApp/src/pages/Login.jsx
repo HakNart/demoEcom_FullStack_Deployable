@@ -2,13 +2,16 @@ import React, { useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useTitle } from '../hooks/useTitle';
-import { login } from '../services/authServices';
-import { useAuth } from '../context/AuthContext';
+// import { login } from '../services/authServices';
+// import { useAuth } from '../context/AuthContext';
+import { useLogin } from '../hooks/useLogin';
+import { AuthConstants } from '../common/AuthConstants';
 
 export function Login() {
   useTitle("Login");
   const navigate = useNavigate();
-  const {isAuthenticated, doLogin} = useAuth(); 
+  // const {isAuthenticated, doLogin} = useAuth(); 
+  const {login, isLoading, error} = useLogin();
 
   const username = useRef();
   const password = useRef();
@@ -21,11 +24,10 @@ export function Login() {
     }
 
     try {
-      await doLogin(authDetail);
-      // getUserLogin.accessToken ? navigate("/products") : toast.error(data);
-      navigate("/products"); // Redirect to product listing page after sucessful login
-    } catch (err) {
-      toast.error(err.message);
+      await login(authDetail);
+    }
+     catch (err) {
+      toast.error(err);
     }
   }
   return (

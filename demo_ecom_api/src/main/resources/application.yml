@@ -1,4 +1,8 @@
 spring:
+  profiles:
+    default:
+      - "dev"
+
   main:
     banner-mode: off
   sql:
@@ -25,7 +29,7 @@ access-token:
 web:
   cors:
     allowed-origins:
-      - "*" # allow all origins
+      - "*" # allow all origins, not allow when credentials:true (for HttpOnly cookies)
     allowed-methods:
       - "GET"
       - "POST"
@@ -33,3 +37,8 @@ web:
       - "DELETE"
       - "*"
 
+# Default app auth properties
+demo:
+  auth:
+    refreshCookieName: refreshToken
+    refreshCookieExpSecond: 600 # 10 minutes

@@ -20,7 +20,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @ToString.Exclude
+    @ToString.Exclude // Prevent recursive error
     private User user;
 
     @Column(name = "amount_paid")

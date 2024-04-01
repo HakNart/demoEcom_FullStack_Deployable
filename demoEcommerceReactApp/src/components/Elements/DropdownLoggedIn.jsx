@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext';
-import { logout } from '../../services/authServices';
-import { useAuth } from '../../context/AuthContext';
+// import { logout } from '../../services/authServices';
+// import { useAuth } from '../../context/AuthContext';
+import { useLogout } from '../../hooks/useLogout';
 
 export const DropdownLoggedIn = ({setDropdown}) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const {clearCart} = useCart();
-  const {isAuthenticated, doLogout} = useAuth();
-
+  // const {isAuthenticated, doLogout} = useAuth();
+  const {logout} = useLogout();
   // useEffect(() =>{
   //   async function fetchData() {
   //     const response = await fetch("")
   //   }
   // }, [])
-  const handleLogout = () => {
-    doLogout();
+  const handleLogout = async () => {
+    // doLogout();
+    await logout();
     clearCart();
     setDropdown(false);
   }

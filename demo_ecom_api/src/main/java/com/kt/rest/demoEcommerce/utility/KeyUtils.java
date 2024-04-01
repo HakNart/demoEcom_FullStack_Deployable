@@ -23,10 +23,6 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class KeyUtils {
-    private static String PRIVATE_HEADER = "-----BEGIN PRIVATE KEY-----\n";
-    private static String PRIVATE_FOOTER = "\n-----END PRIVATE KEY-----\n";
-    private static String PUBLIC_HEADER = "-----BEGIN PUBLIC KEY-----\n";
-    private static String PUBLIC_FOOTER = "\n-----END PUBLIC KEY-----\n";
     public static String ALGORITHM_RSA = "RSA";
 
     final Environment environment;
@@ -48,7 +44,6 @@ public class KeyUtils {
     private KeyPair getAccessTokenKeyPair() {
         if (Objects.isNull(_accessTokenKeyPair)) {
             _accessTokenKeyPair = loadKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
-//            _accessTokenKeyPair = loadKeyPairBase64(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
         }
         return _accessTokenKeyPair;
     }
@@ -80,39 +75,6 @@ public class KeyUtils {
         return keyPair;
     }
 
-    private static void saveKeyBase64(String filePath, Key key, String header, String footer) {
-        try {
-            Base64.Encoder encoder = Base64.getEncoder();
-            FileOutputStream fos = new FileOutputStream(filePath);
-            fos.write(header.getBytes());
-            fos.write(encoder.encodeToString(key.getEncoded()).getBytes());
-            fos.write(footer.getBytes());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private KeyPair loadKeyPairBase64(String publicKeyPath, String privateKeyPath) {
-        KeyPair keyPair1 = getKeyPair(publicKeyPath, privateKeyPath);
-        if (keyPair1 != null) return keyPair1;
-        KeyPair keyPair;
-        File directory = new File("access-token-keys");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-        try {
-            log.info("Generating new public and private keys: {}, {}", publicKeyPath, privateKeyPath);
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
-
-            saveKeyToFile(keyPair.getPublic(), publicKeyPath, PUBLIC_HEADER, PUBLIC_FOOTER);
-            saveKeyToFile(keyPair.getPrivate(), privateKeyPath, PRIVATE_HEADER, PRIVATE_FOOTER);
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Problem generating the keys");
-        }
-        return keyPair;
-    }
 
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath) {
         KeyPair keyPair;
@@ -145,37 +107,12 @@ public class KeyUtils {
         return null;
     }
 
-    private static byte[] sanitizeKeyBase64(byte[] keyBytes, String header, String footer) {
-        try {
-            String keyString = new String(keyBytes);
-            keyString = keyString.replace(header, "");
-            keyString = keyString.replace(footer, "");
-            byte[] newKeyBytes = Base64.getDecoder().decode(keyString.getBytes());
-            return newKeyBytes;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
     private static KeyPair generateKeyPair(String algorithm,int keySize) throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
         keyPairGenerator.initialize(keySize);
         return keyPairGenerator.generateKeyPair();
     }
 
-    private static void saveKeyToFile(Key key, String filePath, String header, String footer) {
-        try {
-            byte[] keyBytes = key.getEncoded();
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                fos.write(header.getBytes());
-                fos.write(Base64.getEncoder().encodeToString(keyBytes).getBytes());
-                fos.write(footer.getBytes());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public RSAPublicKey getAccessTokenPublicKey() {
         return (RSAPublicKey) getAccessTokenKeyPair().getPublic();

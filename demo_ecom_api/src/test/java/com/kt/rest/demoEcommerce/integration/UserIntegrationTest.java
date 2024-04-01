@@ -1,7 +1,7 @@
 package com.kt.rest.demoEcommerce.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kt.rest.demoEcommerce.IntegrationTest;
+import com.kt.rest.demoEcommerce.config.IntegrationTest;
 import com.kt.rest.demoEcommerce.model.auth.RegisterRequest;
 import com.kt.rest.demoEcommerce.model.entity.Role;
 import com.kt.rest.demoEcommerce.model.entity.User;
@@ -11,15 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import static org.assertj.core.api.Assertions.assertThat;

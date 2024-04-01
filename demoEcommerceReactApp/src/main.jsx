@@ -9,18 +9,22 @@ import { ScrollToTop } from './components/Other/ScrollToTop'
 import { CartProvider } from './context/CartContext';
 import { FilterProvider } from './context/FilterContext'
 import './index.css'
+import { AuthProvider } from './context/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <CartProvider>
-      <FilterProvider>
-        <ScrollToTop/>
-        <ToastContainer closeButton={false} position={'bottom-left'} autoClose={2000}/>
-        <App />       
-      </FilterProvider>
-      </CartProvider>
-    </BrowserRouter>
+    {/* // Provide context for all children components */}
+    <AuthProvider>
+      <BrowserRouter>
+        <CartProvider>
+        <FilterProvider>
+          <ScrollToTop/>
+          <ToastContainer closeButton={false} position={'bottom-left'} autoClose={2000}/>
+          <App />       
+        </FilterProvider>
+        </CartProvider>
+      </BrowserRouter>
+    </AuthProvider>
     
   </React.StrictMode>,
 )

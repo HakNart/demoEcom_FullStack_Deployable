@@ -4,104 +4,83 @@ import { toast } from "react-toastify";
 const TOKEN_KEY = "token";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const USERID_KEY = 'uid';
+
 const hostUrl = import.meta.env.VITE_APP_HOST;
 const api_version = "/api/v1"
 const host = `${hostUrl}${api_version}`
 
-export async function login(authDetail) {
+export const AuthService = {
+  baseUrl: host,
+  login,
+  register,
+  logout,
+  checkValidToken,
+  getUser, 
+  refreshAuth,
+}
+
+async function login(authDetail) {
   const requestOptions = {
     method: "POST",
     headers: {"content-Type": "application/json"},
+    credentials: "include",
     body: JSON.stringify(authDetail)
+    
   }
 
-  const response = await fetch(`${host}/auth/login`, requestOptions);
-  if(!response.ok){
-      const responseObject = await response.json();
-      const errorMessage = responseObject.message? responseObject.message: "Internal error";
-      throw { message: errorMessage, status: response.status }; 
-  }
-  const responseObject = await response.json();
-  const data = responseObject.payload;
-  if(data.accessToken){
-      sessionStorage.setItem("token", JSON.stringify(data.accessToken));
-      sessionStorage.setItem("refreshToken", JSON.stringify(data.refreshToken))
-      sessionStorage.setItem("uid", JSON.stringify(data.id));
-  }
-  return data;
+  return await fetch(`${host}/auth/login`, requestOptions);
 }
 
-export async function register(authDetail){
+async function register(authDetail){
   const requestOptions = {
       method: "POST",
       headers: {"content-Type": "application/json"},
       body: JSON.stringify(authDetail)
   }  
-  // const response = await fetch(`${host}/register`, requestOptions);
-  const response = await fetch(`${host}/auth/register`, requestOptions);
-  if(!response.ok){
-    const responseObject = await response.json();
-    const errorMessage = responseObject.message? responseObject.message: "Internal error";
-    throw { message: errorMessage, status: response.status }; 
-  }
-  const responseObject = await response.json();
-  const data = responseObject.payload;
-  if(data.accessToken){
-      sessionStorage.setItem("token", JSON.stringify(data.accessToken));
-      sessionStorage.setItem("refreshToken", JSON.stringify(data.refreshToken))
-      sessionStorage.setItem("uid", JSON.stringify(data.id));
-  }
-
-  return data;
+  return await fetch(`${host}/auth/register`, requestOptions);
 }
 
-export async function refreshAuth() {
-  const refreshToken = getRefreshToken();
-  console.log("Refresh token:" + refreshToken)
+async function refreshAuth() {
+  // const refreshToken = getRefreshToken();
+  // console.log("Refresh token", refreshToken
   const requestOptions = {
     method: "POST",
-    headers: {"content-type": "application/json"},
-    body: JSON.stringify({refreshToken: refreshToken}),
+    // headers: {"content-type": "application/json"},
+    credentials: 'include', // send the httponly refreshToken cokie to server
+    // body: JSON.stringify({refreshToken: refreshToken}),
   }
-  const response = await fetch(`${host}/auth/refreshToken`, requestOptions);
-  if (!response.ok) {
-    const responseObject = await response.json();
-    const errorMessage = responseObject.message? responseObject.message: "Internal error";
-    toast.error(errorMessage);
-    throw { message: errorMessage, status: response.status }; 
-  }
-  const responseObject = await response.json();
-  console.log(responseObject);
-  const data = responseObject.payload;
-  if (data.accessToken) {
-    sessionStorage.setItem("token", JSON.stringify(data.accessToken));
-  }
-  return data.accessToken;
+  return await fetch(`${host}/auth/refreshToken`, requestOptions);
 }
 
-export function logout(){
-  sessionStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem(USERID_KEY);
-  sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+async function logout(){
+  const browserData = getSession();
+  // sessionStorage.removeItem(TOKEN_KEY);
+  // sessionStorage.removeItem(USERID_KEY);
+  // sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+
+  const requestOptions = {
+    method: "GET",
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${browserData.token}`, 
+    }
+  }
+  return await fetch(`${host}/auth/logout`, requestOptions);
 }
-export function checkAuthentication()  {
+function checkValidToken()  {
   const accessToken = getAccessToken();
-  return accessToken && isTokenExpired(accessToken); 
+  return accessToken && !isTokenExpired(accessToken); 
 }
-export function getAccessToken() {
+function getAccessToken() {
   return JSON.parse(sessionStorage.getItem(TOKEN_KEY));
-}
-export function getRefreshToken() {
-  return JSON.parse(sessionStorage.getItem(REFRESH_TOKEN_KEY));
 }
 function getSession() {
   const token = JSON.parse(sessionStorage.getItem("token"));
   const uid = JSON.parse(sessionStorage.getItem("uid"));
-  const refreshToken = JSON.parse(sessionStorage.getItem("refreshToken"));
-  return { token, uid, refreshToken };
+  return { token, uid };
 }
 
-export const getUser = async () => {
+async function getUser() {
   const browserData = getSession();
   const requestOptions = {
     method: "GET",

@@ -29,21 +29,12 @@ public class ProductController {
     public ResponseEntity<?> getAllProducts(@RequestParam(name = "name_like", required = false, defaultValue = "") String name,
                                          @RequestParam(name = "featured", required = false, defaultValue = "") String featured) {
         List<ProductDTO> productDTOList = productService.findAllProductsByCriteria(name, featured);
-//        if (!name.isEmpty()) {
-////            return productRepository.findAllByProductNameContainingIgnoreCase(name);
-//            productDTOList =  productService.findAllProductsByCriteria(name, featured);
-//        } else if (featured.equals("true")) {
-//            return productRepository.findAllByFeaturedTrue();
-//        } else {
-//            return productRepository.findAll();
-//        }
         ApiResponse apiResponse = ApiResponse.builder().success(productDTOList).build();
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getOneProduct(@PathVariable Integer id) {
-//        return Optional.ofNullable(productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
         ApiResponse apiResponse = ApiResponse.builder().success(productService.findOneProductById(id)).build();
         return ResponseEntity.ok(apiResponse);
     }

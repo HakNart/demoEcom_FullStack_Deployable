@@ -5,7 +5,8 @@ import { useCart } from '../../context/CartContext';
 import { DropdownLoggedIn } from '../Elements/DropdownLoggedIn';
 import { DropdownnLoggedOut } from '../Elements/DropdownnLoggedOut';
 import { Search } from '../Sections/Search'
-import { useAuth } from '../../context/AuthContext';
+// import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export function Header() {
   const  {cartList} = useCart();

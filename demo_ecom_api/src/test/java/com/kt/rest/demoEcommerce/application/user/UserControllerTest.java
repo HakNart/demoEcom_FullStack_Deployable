@@ -5,10 +5,10 @@ import com.kt.rest.demoEcommerce.controller.AuthenticationController;
 import com.kt.rest.demoEcommerce.controller.UserController;
 import com.kt.rest.demoEcommerce.model.auth.AuthenticationResponse;
 import com.kt.rest.demoEcommerce.model.auth.RegisterRequest;
+import com.kt.rest.demoEcommerce.model.entity.RefreshToken;
+import com.kt.rest.demoEcommerce.model.entity.User;
 import com.kt.rest.demoEcommerce.repository.UserRepository;
-import com.kt.rest.demoEcommerce.service.AuthenticationService;
-import com.kt.rest.demoEcommerce.service.OrderService;
-import com.kt.rest.demoEcommerce.service.UserService;
+import com.kt.rest.demoEcommerce.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //@IntegrationTest
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest({UserController.class, AuthenticationController.class})
+@WebMvcTest({ AuthenticationController.class})
 @Slf4j
 public class UserControllerTest {
     @Autowired
@@ -46,7 +48,13 @@ public class UserControllerTest {
     private AuthenticationService authenticationService;
 
     @MockBean
-    private UserRepository userRepository;
+    private RefreshTokenService refreshTokenService;
+
+    @MockBean
+    private JwtService jwtService;
+
+//    @MockBean
+//    private UserRepository userRepository;
     @MockBean
     private UserService userService;
     @MockBean
@@ -56,8 +64,24 @@ public class UserControllerTest {
     @MethodSource("validUserRegistration")
     @ParameterizedTest
     void whenValidRegistration_thenReturnAuthResponse(RegisterRequest registerRequest) throws Exception {
+        // Mock authuser
+        User mockUser = User.builder().id(1).username("testuser").email("testuser@email.com").password("123").build();
+        // Mock refreshToken
+        RefreshToken mockRefreshToken = RefreshToken.builder().id(1L).token("testRefreshToken").user(mockUser).build();
+        // Mock refresh cookie
+        ResponseCookie mRefreshCookie = ResponseCookie.from("refreshToken", mockRefreshToken.getToken())
+                .httpOnly(true)
+                .secure(false)
+                .maxAge(600)
+                .path("/")
+                .build();
+
+        /*Since these are mock service, any method call would return null. Therefore, we create mock return*/
         // given
-        when(authenticationService.login(any())).thenReturn(any(AuthenticationResponse.class));
+        when(authenticationService.register(registerRequest)).thenReturn(mockUser);
+        when(refreshTokenService.createRefreshToken(mockUser)).thenReturn(mockRefreshToken);
+        when(jwtService.generateRefreshCookie(mockRefreshToken)).thenReturn(mRefreshCookie);
+        when(authenticationService.createAuthenticationResponseFromUser(mockUser)).thenReturn(any(AuthenticationResponse.class));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/v1/auth/register")

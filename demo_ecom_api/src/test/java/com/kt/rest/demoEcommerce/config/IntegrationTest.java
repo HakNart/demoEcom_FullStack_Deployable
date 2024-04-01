@@ -1,4 +1,4 @@
-package com.kt.rest.demoEcommerce;
+package com.kt.rest.demoEcommerce.config;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

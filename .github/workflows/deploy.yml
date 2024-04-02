@@ -3,7 +3,7 @@
 on: 
     push: 
         branches:
-        -   main
+        -  deploy
 
 jobs:
     backend_test:

@@ -1,21 +1,18 @@
 package com.kt.rest.demoEcommerce.controller;
 
-import com.kt.rest.demoEcommerce.model.auth.*;
+import com.kt.rest.demoEcommerce.model.auth.AuthenticationRequest;
+import com.kt.rest.demoEcommerce.model.auth.RegisterRequest;
 import com.kt.rest.demoEcommerce.model.dto.ApiResponse;
-import com.kt.rest.demoEcommerce.model.dto.CustomErrorResponse;
 import com.kt.rest.demoEcommerce.model.entity.User;
-import com.kt.rest.demoEcommerce.repository.UserRepository;
 import com.kt.rest.demoEcommerce.service.AuthenticationService;
 import com.kt.rest.demoEcommerce.service.JwtService;
 import com.kt.rest.demoEcommerce.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

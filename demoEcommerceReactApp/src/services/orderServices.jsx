@@ -39,7 +39,6 @@ export async function createOrder(cartList, total, user){
       // }
       userId: user.id,
   }
-  console.log(order)
   const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${browserData.token}` },

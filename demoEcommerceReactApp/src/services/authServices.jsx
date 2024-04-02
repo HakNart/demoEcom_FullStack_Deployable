@@ -54,9 +54,7 @@ async function refreshAuth() {
 
 async function logout(){
   const browserData = getSession();
-  // sessionStorage.removeItem(TOKEN_KEY);
-  // sessionStorage.removeItem(USERID_KEY);
-  // sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+
 
   const requestOptions = {
     method: "GET",
@@ -98,7 +96,6 @@ async function getUser() {
     throw { message: errorMessage, status: response.status }; 
 }
   const responseObject = await response.json();
-  console.log(responseObject);
   const data = responseObject.payload;
   return data;
 }

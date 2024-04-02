@@ -21,7 +21,6 @@ export const useRefreshToken = () => {
       logout();
       navigate("/login")
     } else {
-      console.log("Refreshing token");
       const data = jsonRespone.payload;
       sessionStorage.setItem(AuthConstants.TOKEN_KEY, JSON.stringify(data.accessToken));
 

@@ -1,6 +1,8 @@
+import { AuthService } from "./authServices";
+
 const hostUrl = import.meta.env.VITE_APP_HOST;
 const api_version = "/api/v1"
-const host = `${hostUrl}${api_version}`
+const host = AuthService.baseUrl;
 export async function getProductList(searchTerm) {
   const response = await fetch(`${host}/products?name_like=${searchTerm?searchTerm:""}`);
   if(!response.ok){

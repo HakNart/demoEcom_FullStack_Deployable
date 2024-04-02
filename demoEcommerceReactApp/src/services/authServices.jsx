@@ -5,7 +5,7 @@ const TOKEN_KEY = "token";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const USERID_KEY = 'uid';
 
-const hostUrl = import.meta.env.VITE_APP_HOST;
+const hostUrl = import.meta.env.VITE_APP_HOST || "http://localhost:9999";
 const api_version = "/api/v1"
 const host = `${hostUrl}${api_version}`
 
@@ -15,28 +15,28 @@ export const AuthService = {
   register,
   logout,
   checkValidToken,
-  getUser, 
+  getUser,
   refreshAuth,
 }
 
 async function login(authDetail) {
   const requestOptions = {
     method: "POST",
-    headers: {"content-Type": "application/json"},
+    headers: { "content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(authDetail)
-    
+
   }
 
   return await fetch(`${host}/auth/login`, requestOptions);
 }
 
-async function register(authDetail){
+async function register(authDetail) {
   const requestOptions = {
-      method: "POST",
-      headers: {"content-Type": "application/json"},
-      body: JSON.stringify(authDetail)
-  }  
+    method: "POST",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify(authDetail)
+  }
   return await fetch(`${host}/auth/register`, requestOptions);
 }
 
@@ -52,7 +52,7 @@ async function refreshAuth() {
   return await fetch(`${host}/auth/refreshToken`, requestOptions);
 }
 
-async function logout(){
+async function logout() {
   const browserData = getSession();
 
 
@@ -60,14 +60,14 @@ async function logout(){
     method: "GET",
     credentials: 'include',
     headers: {
-      Authorization: `Bearer ${browserData.token}`, 
+      Authorization: `Bearer ${browserData.token}`,
     }
   }
   return await fetch(`${host}/auth/logout`, requestOptions);
 }
-function checkValidToken()  {
+function checkValidToken() {
   const accessToken = getAccessToken();
-  return accessToken && !isTokenExpired(accessToken); 
+  return accessToken && !isTokenExpired(accessToken);
 }
 function getAccessToken() {
   return JSON.parse(sessionStorage.getItem(TOKEN_KEY));
@@ -82,30 +82,30 @@ async function getUser() {
   const browserData = getSession();
   const requestOptions = {
     method: "GET",
-    headers: { 
-      "Content-Type": "application/json", 
-      Authorization: `Bearer ${browserData.token}` 
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${browserData.token}`
     }
   }
   // const response = await fetch(`${host}/660/users/${browserData.uid}`, requestOptions);
   // const response = await fetch(`${host}/users/${browserData.uid}`, requestOptions);
   const response = await fetch(`${host}/users/self`, requestOptions);
-  if(!response.ok){
+  if (!response.ok) {
     const responseObject = await response.json();
-    const errorMessage = responseObject.message? responseObject.message: "Internal error";
-    throw { message: errorMessage, status: response.status }; 
-}
+    const errorMessage = responseObject.message ? responseObject.message : "Internal error";
+    throw { message: errorMessage, status: response.status };
+  }
   const responseObject = await response.json();
   const data = responseObject.payload;
   return data;
 }
 
-export function   isTokenExpired(token) {
+export function isTokenExpired(token) {
   const bufferTimeInMinutes = 1;
   const decoded = jwtDecode(token);
   if (decoded.exp) {
     const currentTime = Date.now() / 1000;
-    return currentTime > decoded.exp - bufferTimeInMinutes*60; 
+    return currentTime > decoded.exp - bufferTimeInMinutes * 60;
   }
   return true;
 }

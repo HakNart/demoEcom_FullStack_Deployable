@@ -18,7 +18,7 @@ ACCESS_TOKEN_PRIVATE_KEY_PATH: "access_token_keys/private_key.key"
 ACCESS_TOKEN_PUBLIC_KEY_PATH: "access_token_keys/public_key.key"
 DB_HOST: "localhost"
 DB_USERNAME: "postgres"
-DB_PASSWORD: "nart123"
+DB_PASSWORD: "password"
 DB_NAME: "demo_ecom"
 DB_PORT: 5432
 

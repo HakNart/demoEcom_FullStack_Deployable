@@ -5,7 +5,7 @@ const TOKEN_KEY = "token";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const USERID_KEY = 'uid';
 
-const hostUrl = import.meta.env.VITE_APP_HOST || "http://localhost:9999";
+const hostUrl = import.meta.env.VITE_APP_HOST || "http://localhost:8080";
 const api_version = "/api/v1"
 const host = `${hostUrl}${api_version}`
 

@@ -40,5 +40,5 @@ docker compose up
 ```
 
 ## Database architecture
-![database visual](contents\dbvisual.png)
+![database visual](contents/dbvisual.png)
 
